@@ -1,7 +1,5 @@
 export const env = {
   appName: import.meta.env.VITE_APP_NAME ?? 'Otoshimae',
-  appUrl: import.meta.env.VITE_APP_URL ?? 'http://localhost:5173',
-  apiUrl: import.meta.env.VITE_API_URL ?? 'http://localhost:4000',
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL ?? '',
   supabasePublishableKey:
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ??

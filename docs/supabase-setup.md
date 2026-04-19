@@ -72,6 +72,7 @@ El acceso a `/admin` depende de dos cosas:
 Usa `.env.local` con:
 
 ```env
+VITE_APP_NAME=Otoshimae
 VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
 VITE_SUPABASE_STORAGE_BUCKET=product-images
@@ -79,11 +80,15 @@ VITE_SUPABASE_STORAGE_BUCKET=product-images
 
 ### Vercel
 
-En `Project Settings > Environment Variables` agrega las mismas claves:
+En `Project Settings > Environment Variables` agrega estas claves:
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
-- `VITE_SUPABASE_STORAGE_BUCKET`
+- Requeridas:
+  - `VITE_SUPABASE_URL`
+  - `VITE_SUPABASE_PUBLISHABLE_KEY`
+- Recomendadas:
+  - `VITE_SUPABASE_STORAGE_BUCKET`
+- Opcional:
+  - `VITE_APP_NAME`
 
 ## 6. Bucket de imágenes
 
