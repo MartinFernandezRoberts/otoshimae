@@ -1,6 +1,9 @@
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { PagePlaceholder } from '@/components/PagePlaceholder'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
 import { mockProducts } from '@/features/catalog/mockProducts'
 import { formatCurrency } from '@/lib/formatCurrency'
 import { routes } from '@/lib/routes'
@@ -13,39 +16,35 @@ export function ProductDetailPage() {
     <PagePlaceholder
       eyebrow={product.category}
       title={product.name}
-      description="Plantilla base para la ficha de producto individual. Más adelante aquí puede vivir la galería, variantes, stock, SEO y recomendaciones."
-      actions={
-        <Link
-          to={routes.cart}
-          className="inline-flex rounded-full bg-[var(--foreground)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-deep)]"
-        >
-          Ir al carrito
-        </Link>
-      }
+      description="Primera ficha de producto con tono editorial, materialidad visible y estructura preparada para sumar galería, stock y contenido comercial."
+      actions={<Button to={routes.cart}>Ir al carrito</Button>}
     >
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div
-          className="min-h-[360px] rounded-[34px] border border-[var(--line)] shadow-[0_30px_90px_rgba(65,39,22,0.16)]"
+          className="min-h-[420px] rounded-[var(--radius-xl)] border border-[var(--line)] shadow-[var(--shadow-card)]"
           style={{
-            background: `linear-gradient(135deg, ${product.accent} 0%, #24160f 100%)`,
+            background: `radial-gradient(circle at 50% 20%, ${product.accent} 0%, rgba(255,255,255,0) 26%), linear-gradient(135deg, #181a1f 0%, #060709 100%)`,
           }}
         />
 
-        <aside className="space-y-5 rounded-[34px] border border-[var(--line)] bg-[var(--surface-strong)] p-7 shadow-[0_24px_80px_rgba(65,39,22,0.09)]">
+        <Card as="aside" className="space-y-5 p-7">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="accent">{product.edition}</Badge>
+            <Badge>{product.material}</Badge>
+          </div>
           <p className="text-sm uppercase tracking-[0.24em] text-[var(--muted)]">
             Slug activo: {product.slug}
           </p>
-          <p className="text-4xl font-semibold tracking-[-0.04em] text-[var(--accent-deep)]">
+          <p className="text-4xl text-[var(--accent)]">
             {formatCurrency(product.price)}
           </p>
-          <p className="text-base leading-7 text-[var(--muted)]">
+          <p className="text-base leading-7 text-[var(--foreground-soft)]">
             {product.description}
           </p>
-          <div className="rounded-[24px] border border-[var(--line)] bg-white p-5 text-sm leading-7 text-[var(--muted)]">
-            Placeholder para variantes, materiales, tiempos de producción y CTA
-            de compra.
-          </div>
-        </aside>
+          <Card tone="muted" className="p-5 text-sm leading-7 text-[var(--foreground-soft)]">
+            Placeholder para variantes, tiempos de producción, fotografía real y recomendaciones cruzadas.
+          </Card>
+        </Card>
       </div>
     </PagePlaceholder>
   )

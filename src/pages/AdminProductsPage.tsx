@@ -1,5 +1,6 @@
+import { ProductCard } from '@/components/ProductCard'
 import { PagePlaceholder } from '@/components/PagePlaceholder'
-import { ProductGridPlaceholder } from '@/features/catalog/ProductGridPlaceholder'
+import { publishedProducts } from '@/features/catalog/mockProducts'
 
 export function AdminProductsPage() {
   return (
@@ -8,7 +9,11 @@ export function AdminProductsPage() {
       title="Productos"
       description="Vista inicial para administrar fichas de producto, precios, slugs y publicación del catálogo."
     >
-      <ProductGridPlaceholder />
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {publishedProducts.slice(0, 3).map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </PagePlaceholder>
   )
 }

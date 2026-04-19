@@ -1,4 +1,5 @@
 import { PagePlaceholder } from '@/components/PagePlaceholder'
+import { Card } from '@/components/ui/Card'
 
 const settings = [
   'Configuración de marca y datos de contacto',
@@ -15,12 +16,14 @@ export function AdminSettingsPage() {
     >
       <div className="grid gap-4 md:grid-cols-3">
         {settings.map((item) => (
-          <article
+          <Card
             key={item}
-            className="rounded-[28px] border border-white/10 bg-white/5 p-5 text-sm leading-7 text-slate-200"
+            as="article"
+            tone="admin"
+            className="p-5 text-sm leading-7 text-slate-200"
           >
             {item}
-          </article>
+          </Card>
         ))}
       </div>
     </PagePlaceholder>

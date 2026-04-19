@@ -1,4 +1,5 @@
 import { PagePlaceholder } from '@/components/PagePlaceholder'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export function AdminCategoriesPage() {
   return (
@@ -7,9 +8,10 @@ export function AdminCategoriesPage() {
       title="Categorías"
       description="Espacio base para ordenar máscaras por línea, estilo o colección y mantener una navegación clara en catálogo."
     >
-      <div className="rounded-[28px] border border-white/10 bg-white/5 p-6 text-sm leading-7 text-slate-200">
-        Placeholder listo para alta, edición y estado de categorías.
-      </div>
+      <EmptyState
+        title="Aún no hay categorías administrables"
+        description="La capa visual ya está lista. Aquí luego podemos sumar alta, edición, estado e imagen de colección para cada familia de producto."
+      />
     </PagePlaceholder>
   )
 }
