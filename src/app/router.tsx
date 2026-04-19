@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
+import { RedirectIfAuthenticated } from '@/features/auth/RedirectIfAuthenticated'
+import { RequireAdmin } from '@/features/auth/RequireAdmin'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
 import { AdminCategoriesPage } from '@/pages/AdminCategoriesPage'
@@ -29,18 +31,28 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/admin/login',
-    element: <AdminLoginPage />,
+    element: <RedirectIfAuthenticated />,
+    children: [
+      {
+        path: '/admin/login',
+        element: <AdminLoginPage />,
+      },
+    ],
   },
   {
     path: '/admin',
-    element: <AdminLayout />,
+    element: <RequireAdmin />,
     children: [
-      { index: true, element: <AdminDashboardPage /> },
-      { path: 'productos', element: <AdminProductsPage /> },
-      { path: 'categorias', element: <AdminCategoriesPage /> },
-      { path: 'pedidos', element: <AdminOrdersPage /> },
-      { path: 'configuracion', element: <AdminSettingsPage /> },
+      {
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <AdminDashboardPage /> },
+          { path: 'productos', element: <AdminProductsPage /> },
+          { path: 'categorias', element: <AdminCategoriesPage /> },
+          { path: 'pedidos', element: <AdminOrdersPage /> },
+          { path: 'configuracion', element: <AdminSettingsPage /> },
+        ],
+      },
     ],
   },
 ])

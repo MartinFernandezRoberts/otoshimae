@@ -71,6 +71,8 @@ Las variables públicas del frontend usan prefijo `VITE_`.
 
 Revisa [.env.example](./.env.example) para la base inicial.
 
+Para la integración con Supabase revisa [docs/supabase-setup.md](./docs/supabase-setup.md).
+
 ## Deploy en Vercel
 
 ### Opción 1: conectar el repositorio
