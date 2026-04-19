@@ -21,6 +21,8 @@ export function StatusMessage({
 }: StatusMessageProps) {
   return (
     <div
+      role={tone === 'error' ? 'alert' : 'status'}
+      aria-live={tone === 'error' ? 'assertive' : 'polite'}
       className={cn(
         'rounded-[var(--radius-sm)] border px-4 py-3 text-sm',
         toneClasses[tone],

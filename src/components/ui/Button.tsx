@@ -93,6 +93,7 @@ export function Button(props: ButtonProps) {
       type={buttonProps.type ?? 'button'}
       className={getButtonStyles({ variant, size, className })}
       disabled={loading || buttonProps.disabled}
+      aria-busy={loading || undefined}
       onClick={buttonProps.onClick}
       onBlur={buttonProps.onBlur}
       onFocus={buttonProps.onFocus}

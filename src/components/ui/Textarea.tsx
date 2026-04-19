@@ -14,6 +14,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   function Textarea({ className, error, hint, icon, id, label, ...props }, ref) {
     const generatedId = useId()
     const textareaId = id ?? generatedId
+    const hintId = hint ? `${textareaId}-hint` : undefined
+    const errorId = error ? `${textareaId}-error` : undefined
 
     return (
       <label className="block space-y-2">
@@ -37,11 +39,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
               className,
             )}
             aria-invalid={Boolean(error)}
+            aria-describedby={[hintId, errorId].filter(Boolean).join(' ') || undefined}
             {...props}
           />
         </span>
-        {hint ? <span className="block text-sm text-[var(--muted)]">{hint}</span> : null}
-        {error ? <span className="block text-sm text-[var(--danger)]">{error}</span> : null}
+        {hint ? (
+          <span id={hintId} className="block text-sm text-[var(--muted)]">
+            {hint}
+          </span>
+        ) : null}
+        {error ? (
+          <span id={errorId} className="block text-sm text-[var(--danger)]">
+            {error}
+          </span>
+        ) : null}
       </label>
     )
   },

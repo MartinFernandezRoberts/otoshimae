@@ -11,6 +11,22 @@ type ProductSelectRow = ProductRow & {
   product_images: ProductImageRow[] | null
 }
 
+type CacheEntry<T> = {
+  value: T
+  expiresAt: number
+}
+
+const PUBLIC_CACHE_TTL_MS = 60_000
+
+let publicCategoriesCache: CacheEntry<CategoryRow[]> | null = null
+let publicCategoriesPromise: Promise<CategoryRow[]> | null = null
+let publicProductsCache: CacheEntry<PublicProductSummary[]> | null = null
+let publicProductsPromise: Promise<PublicProductSummary[]> | null = null
+
+function isCacheFresh<T>(entry: CacheEntry<T> | null) {
+  return Boolean(entry && entry.expiresAt > Date.now())
+}
+
 function mapProduct(row: ProductSelectRow): PublicProductSummary {
   return {
     ...row,
@@ -21,7 +37,7 @@ function mapProduct(row: ProductSelectRow): PublicProductSummary {
   }
 }
 
-export async function listPublicCategories() {
+async function fetchPublicCategories() {
   const supabase = ensureSupabase()
   const { data, error } = await supabase
     .from('categories')
@@ -36,7 +52,7 @@ export async function listPublicCategories() {
   return (data ?? []) as CategoryRow[]
 }
 
-export async function listPublicProducts() {
+async function fetchPublicProducts() {
   const supabase = ensureSupabase()
   const { data, error } = await supabase
     .from('products')
@@ -67,6 +83,54 @@ export async function listPublicProducts() {
   }
 
   return ((data ?? []) as unknown as ProductSelectRow[]).map(mapProduct)
+}
+
+export async function listPublicCategories(options?: { force?: boolean }) {
+  if (!options?.force && isCacheFresh(publicCategoriesCache)) {
+    return publicCategoriesCache!.value
+  }
+
+  if (!options?.force && publicCategoriesPromise) {
+    return publicCategoriesPromise
+  }
+
+  publicCategoriesPromise = fetchPublicCategories().then((categories) => {
+    publicCategoriesCache = {
+      value: categories,
+      expiresAt: Date.now() + PUBLIC_CACHE_TTL_MS,
+    }
+    publicCategoriesPromise = null
+    return categories
+  })
+
+  return publicCategoriesPromise.catch((error: unknown) => {
+    publicCategoriesPromise = null
+    throw error
+  })
+}
+
+export async function listPublicProducts(options?: { force?: boolean }) {
+  if (!options?.force && isCacheFresh(publicProductsCache)) {
+    return publicProductsCache!.value
+  }
+
+  if (!options?.force && publicProductsPromise) {
+    return publicProductsPromise
+  }
+
+  publicProductsPromise = fetchPublicProducts().then((products) => {
+    publicProductsCache = {
+      value: products,
+      expiresAt: Date.now() + PUBLIC_CACHE_TTL_MS,
+    }
+    publicProductsPromise = null
+    return products
+  })
+
+  return publicProductsPromise.catch((error: unknown) => {
+    publicProductsPromise = null
+    throw error
+  })
 }
 
 export async function getPublicProductBySlug(slug: string) {

@@ -21,6 +21,7 @@ export function StockAdjustmentForm({
       <Input
         label="Ajuste"
         type="number"
+        step="1"
         value={values.quantity}
         onChange={(event) => onChange('quantity', event.target.value)}
         error={errors.quantity}

@@ -1,35 +1,47 @@
+import { Suspense } from 'react'
+import type { ReactNode } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 
+import {
+  AdminCategoriesPage,
+  AdminDashboardPage,
+  AdminLoginPage,
+  AdminOrdersPage,
+  AdminProductsPage,
+  AdminSettingsPage,
+  CartPage,
+  CatalogPage,
+  CheckoutPage,
+  CheckoutSuccessPage,
+  HomePage,
+  NotFoundPage,
+  ProductDetailPage,
+} from '@/app/lazy-pages'
+import { RouteLoader } from '@/components/RouteLoader'
 import { RedirectIfAuthenticated } from '@/features/auth/RedirectIfAuthenticated'
 import { RequireAdmin } from '@/features/auth/RequireAdmin'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { PublicLayout } from '@/layouts/PublicLayout'
-import { AdminCategoriesPage } from '@/pages/AdminCategoriesPage'
-import { AdminDashboardPage } from '@/pages/AdminDashboardPage'
-import { AdminLoginPage } from '@/pages/AdminLoginPage'
-import { AdminOrdersPage } from '@/pages/AdminOrdersPage'
-import { AdminProductsPage } from '@/pages/AdminProductsPage'
-import { AdminSettingsPage } from '@/pages/AdminSettingsPage'
-import { CartPage } from '@/pages/CartPage'
-import { CatalogPage } from '@/pages/CatalogPage'
-import { CheckoutPage } from '@/pages/CheckoutPage'
-import { CheckoutSuccessPage } from '@/pages/CheckoutSuccessPage'
-import { HomePage } from '@/pages/HomePage'
-import { NotFoundPage } from '@/pages/NotFoundPage'
-import { ProductDetailPage } from '@/pages/ProductDetailPage'
+
+function withSuspense(element: ReactNode) {
+  return <Suspense fallback={<RouteLoader />}>{element}</Suspense>
+}
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <PublicLayout />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'catalogo', element: <CatalogPage /> },
-      { path: 'producto/:slug', element: <ProductDetailPage /> },
-      { path: 'carrito', element: <CartPage /> },
-      { path: 'checkout', element: <CheckoutPage /> },
-      { path: 'checkout/confirmacion', element: <CheckoutSuccessPage /> },
-      { path: '*', element: <NotFoundPage /> },
+      { index: true, element: withSuspense(<HomePage />) },
+      { path: 'catalogo', element: withSuspense(<CatalogPage />) },
+      { path: 'producto/:slug', element: withSuspense(<ProductDetailPage />) },
+      { path: 'carrito', element: withSuspense(<CartPage />) },
+      { path: 'checkout', element: withSuspense(<CheckoutPage />) },
+      {
+        path: 'checkout/confirmacion',
+        element: withSuspense(<CheckoutSuccessPage />),
+      },
+      { path: '*', element: withSuspense(<NotFoundPage />) },
     ],
   },
   {
@@ -37,7 +49,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/admin/login',
-        element: <AdminLoginPage />,
+        element: withSuspense(<AdminLoginPage />),
       },
     ],
   },
@@ -48,11 +60,11 @@ export const router = createBrowserRouter([
       {
         element: <AdminLayout />,
         children: [
-          { index: true, element: <AdminDashboardPage /> },
-          { path: 'productos', element: <AdminProductsPage /> },
-          { path: 'categorias', element: <AdminCategoriesPage /> },
-          { path: 'pedidos', element: <AdminOrdersPage /> },
-          { path: 'configuracion', element: <AdminSettingsPage /> },
+          { index: true, element: withSuspense(<AdminDashboardPage />) },
+          { path: 'productos', element: withSuspense(<AdminProductsPage />) },
+          { path: 'categorias', element: withSuspense(<AdminCategoriesPage />) },
+          { path: 'pedidos', element: withSuspense(<AdminOrdersPage />) },
+          { path: 'configuracion', element: withSuspense(<AdminSettingsPage />) },
         ],
       },
     ],

@@ -12,6 +12,10 @@ type LocationState = {
   from?: string
 }
 
+function isSafeAdminRedirect(path: string | undefined) {
+  return Boolean(path && path.startsWith('/admin'))
+}
+
 export function AdminLoginPanel() {
   const navigate = useNavigate()
   const location = useLocation()
@@ -21,28 +25,48 @@ export function AdminLoginPanel() {
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string
+    password?: string
+  }>({})
 
   const locationState = location.state as LocationState | null
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError(null)
+    setFieldErrors({})
 
-    if (!email.trim() || !password.trim()) {
-      setError('Completa correo y contraseña.')
+    const nextFieldErrors: { email?: string; password?: string } = {}
+    const normalizedEmail = email.trim().toLowerCase()
+
+    if (!/\S+@\S+\.\S+/.test(normalizedEmail)) {
+      nextFieldErrors.email = 'Ingresa un correo valido.'
+    }
+
+    if (password.trim().length < 6) {
+      nextFieldErrors.password = 'La contrasena debe tener al menos 6 caracteres.'
+    }
+
+    if (Object.keys(nextFieldErrors).length > 0) {
+      setFieldErrors(nextFieldErrors)
+      setError('Revisa los campos marcados antes de continuar.')
       return
     }
 
     try {
       setSubmitting(true)
-      const result = await signIn(email.trim(), password)
+      const result = await signIn(normalizedEmail, password)
 
       if (result.error) {
         setError(result.error)
         return
       }
 
-      navigate(locationState?.from ?? routes.admin, { replace: true })
+      navigate(
+        isSafeAdminRedirect(locationState?.from) ? locationState!.from! : routes.admin,
+        { replace: true },
+      )
     } finally {
       setSubmitting(false)
     }
@@ -58,12 +82,12 @@ export function AdminLoginPanel() {
           Panel administrativo de Otoshimae
         </h1>
         <p className="max-w-xl text-base leading-7 text-[var(--foreground-soft)]">
-          El área admin ahora exige autenticación real con Supabase y valida que el
+          El area admin exige autenticacion real con Supabase y valida que el
           usuario exista en la tabla <code>admin_users</code>.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <Card className="space-y-4 p-6">
           <Input
             label="Correo"
@@ -71,14 +95,18 @@ export function AdminLoginPanel() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="admin@otoshimae.cl"
+            autoComplete="email"
+            error={fieldErrors.email}
           />
 
           <Input
-            label="Contraseña"
+            label="Contrasena"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="********"
+            autoComplete="current-password"
+            error={fieldErrors.password}
           />
 
           {error ? <StatusMessage tone="error" message={error} /> : null}

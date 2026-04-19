@@ -85,8 +85,8 @@ export function CatalogPage() {
         setError(null)
 
         const [nextProducts, nextCategories] = await Promise.all([
-          listPublicProducts(),
-          listPublicCategories(),
+          listPublicProducts({ force: reloadKey > 0 }),
+          listPublicCategories({ force: reloadKey > 0 }),
         ])
 
         if (!cancelled) {

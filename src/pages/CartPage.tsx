@@ -16,6 +16,10 @@ export function CartPage() {
     useCart()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const totalUnits = useMemo(
+    () => items.reduce((total, item) => total + item.quantity, 0),
+    [items],
+  )
 
   useSeo({
     title: 'Carrito',
@@ -132,6 +136,7 @@ export function CartPage() {
                 <div className="flex flex-wrap items-center gap-3">
                   <button
                     type="button"
+                    aria-label={`Disminuir cantidad de ${item.name}`}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-[var(--foreground)] transition hover:border-[var(--accent)]"
                     onClick={() =>
                       updateQuantity(item.productId, Math.max(1, item.quantity - 1))
@@ -144,6 +149,7 @@ export function CartPage() {
                   </div>
                   <button
                     type="button"
+                    aria-label={`Aumentar cantidad de ${item.name}`}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-[var(--foreground)] transition hover:border-[var(--accent)]"
                     onClick={() =>
                       updateQuantity(
@@ -179,7 +185,7 @@ export function CartPage() {
             </div>
             <div className="flex items-center justify-between text-sm text-[var(--foreground-soft)]">
               <span>Unidades</span>
-              <span>{items.reduce((total, item) => total + item.quantity, 0)}</span>
+              <span>{totalUnits}</span>
             </div>
             <div className="flex items-center justify-between text-lg text-[var(--foreground)]">
               <span>Total</span>

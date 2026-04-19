@@ -79,7 +79,10 @@ export function ProductDetailPage() {
 
   const mainImage = selectedImage ?? gallery[0] ?? null
   const quantityLabel = useMemo(
-    () => (product?.stock ?? 0) > 0 ? `${quantity} unidad${quantity > 1 ? 'es' : ''}` : 'Sin stock',
+    () =>
+      (product?.stock ?? 0) > 0
+        ? `${quantity} unidad${quantity > 1 ? 'es' : ''}`
+        : 'Sin stock',
     [product?.stock, quantity],
   )
 
@@ -167,6 +170,8 @@ export function ProductDetailPage() {
                 <button
                   key={image.id}
                   type="button"
+                  aria-label={`Ver imagen ${image.alt ?? product.name}`}
+                  aria-pressed={image.id === mainImage?.id}
                   className={`overflow-hidden rounded-[var(--radius-md)] border transition ${
                     image.id === mainImage?.id
                       ? 'border-[var(--accent)]'
@@ -217,6 +222,7 @@ export function ProductDetailPage() {
             <div className="flex items-center gap-3">
               <button
                 type="button"
+                aria-label="Disminuir cantidad"
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[var(--accent)]"
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                 disabled={product.stock <= 0}
@@ -228,6 +234,7 @@ export function ProductDetailPage() {
               </div>
               <button
                 type="button"
+                aria-label="Aumentar cantidad"
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[var(--accent)]"
                 onClick={() =>
                   setQuantity((value) => Math.min(product.stock, value + 1))

@@ -25,6 +25,7 @@ type CheckoutFormValues = {
 function validateForm(values: CheckoutFormValues) {
   const nextErrors: Partial<Record<keyof CheckoutFormValues, string>> = {}
   const emailPattern = /\S+@\S+\.\S+/
+  const digitsOnlyPhone = values.customerPhone.replace(/\D/g, '')
 
   if (values.customerName.trim().length < 3) {
     nextErrors.customerName = 'Ingresa un nombre valido.'
@@ -32,6 +33,10 @@ function validateForm(values: CheckoutFormValues) {
 
   if (!emailPattern.test(values.customerEmail.trim())) {
     nextErrors.customerEmail = 'Ingresa un correo valido.'
+  }
+
+  if (values.customerPhone.trim() && digitsOnlyPhone.length < 8) {
+    nextErrors.customerPhone = 'Ingresa un telefono valido o dejalo vacio.'
   }
 
   return nextErrors
@@ -214,7 +219,11 @@ export function CheckoutOrderForm() {
   }
 
   return (
-    <form className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]" onSubmit={handleSubmit}>
+    <form
+      className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]"
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <Card className="space-y-5 p-6">
         <Input
           label="Nombre"
@@ -251,6 +260,8 @@ export function CheckoutOrderForm() {
             }))
           }
           placeholder="+56 9 1234 5678"
+          autoComplete="tel"
+          error={fieldErrors.customerPhone}
         />
         <Textarea
           label="Notas"

@@ -48,9 +48,9 @@ export function HomePage() {
         setError(null)
 
         const [products, categories, banners] = await Promise.all([
-          listPublicProducts(),
-          listPublicCategories(),
-          listHomepageBanners(),
+          listPublicProducts({ force: reloadKey > 0 }),
+          listPublicCategories({ force: reloadKey > 0 }),
+          listHomepageBanners({ force: reloadKey > 0 }),
         ])
 
         if (!cancelled) {

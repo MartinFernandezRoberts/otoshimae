@@ -40,15 +40,15 @@ export function ProductForm({
       </div>
 
       <Textarea
-        label="Descripción"
+        label="Descripcion"
         value={values.description}
         onChange={(event) => onChange('description', event.target.value)}
         error={errors.description}
-        placeholder="Descripción completa del producto."
+        placeholder="Descripcion completa del producto."
       />
 
       <Textarea
-        label="Descripción corta"
+        label="Descripcion corta"
         value={values.shortDescription}
         onChange={(event) => onChange('shortDescription', event.target.value)}
         error={errors.shortDescription}
@@ -60,6 +60,7 @@ export function ProductForm({
           label="Precio"
           type="number"
           min={0}
+          step="0.01"
           value={values.price}
           onChange={(event) => onChange('price', event.target.value)}
           error={errors.price}
@@ -69,6 +70,7 @@ export function ProductForm({
           label="Precio comparativo"
           type="number"
           min={0}
+          step="0.01"
           value={values.comparePrice}
           onChange={(event) => onChange('comparePrice', event.target.value)}
           error={errors.comparePrice}
@@ -78,6 +80,7 @@ export function ProductForm({
           label="Stock"
           type="number"
           min={0}
+          step="1"
           value={values.stock}
           onChange={(event) => onChange('stock', event.target.value)}
           error={errors.stock}
@@ -93,11 +96,12 @@ export function ProductForm({
       </div>
 
       <Select
-        label="Categoría"
+        label="Categoria"
         value={values.categoryId}
         onChange={(event) => onChange('categoryId', event.target.value)}
+        error={errors.categoryId}
         options={[
-          { value: '', label: 'Sin categoría' },
+          { value: '', label: 'Sin categoria' },
           ...categories.map((category) => ({
             value: category.id,
             label: category.name,

@@ -24,7 +24,7 @@ export function RequireAdmin() {
       <Navigate
         to={routes.adminLogin}
         replace
-        state={{ from: location.pathname }}
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
       />
     )
   }

@@ -19,7 +19,7 @@ export function CategoryForm({ values, errors, onChange }: CategoryFormProps) {
         value={values.name}
         onChange={(event) => onChange('name', event.target.value)}
         error={errors.name}
-        placeholder="Colección Ritual"
+        placeholder="Coleccion Ritual"
       />
       <Input
         label="Slug"
@@ -29,11 +29,11 @@ export function CategoryForm({ values, errors, onChange }: CategoryFormProps) {
         placeholder="coleccion-ritual"
       />
       <Textarea
-        label="Descripción"
+        label="Descripcion"
         value={values.description}
         onChange={(event) => onChange('description', event.target.value)}
         error={errors.description}
-        placeholder="Describe el tono o propósito de la categoría."
+        placeholder="Describe el tono o proposito de la categoria."
       />
       <label className="flex items-center gap-3 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--background-soft)] px-4 py-3 text-sm text-[var(--foreground)]">
         <input
@@ -41,7 +41,7 @@ export function CategoryForm({ values, errors, onChange }: CategoryFormProps) {
           checked={values.isActive}
           onChange={(event) => onChange('isActive', event.target.checked)}
         />
-        Categoría activa
+        Categoria activa
       </label>
     </div>
   )

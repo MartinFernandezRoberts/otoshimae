@@ -7,7 +7,7 @@ import { ensureSupabase, supabase } from '@/lib/supabase'
 import type { AdminUserRow } from '@/types/database'
 
 const missingConfigMessage =
-  'Faltan las variables de Supabase. Revisa tu .env.local o la configuración de Vercel.'
+  'Faltan las variables de Supabase. Revisa tu .env.local o la configuracion de Vercel.'
 
 async function fetchAdminUser(userId: string) {
   const client = ensureSupabase()
@@ -124,7 +124,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setLoading(false)
           return {
             error:
-              'No se pudo verificar el acceso admin. Revisa la tabla admin_users y sus políticas.',
+              'No se pudo verificar el acceso admin. Revisa la tabla admin_users y sus politicas.',
           }
         }
       },

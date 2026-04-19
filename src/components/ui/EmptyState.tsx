@@ -16,8 +16,15 @@ export function EmptyState({
   icon,
 }: EmptyStateProps) {
   return (
-    <Card className="flex flex-col items-start gap-4 p-8">
-      <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--accent-soft)] text-[var(--accent)]">
+    <Card
+      className="flex flex-col items-start gap-4 p-8"
+      role="status"
+      aria-live="polite"
+    >
+      <div
+        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--accent-soft)] text-[var(--accent)]"
+        aria-hidden="true"
+      >
         {icon ?? <span className="text-lg">O</span>}
       </div>
       <div className="space-y-2">
