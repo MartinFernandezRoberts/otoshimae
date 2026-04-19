@@ -38,6 +38,8 @@ export type ProductImageRow = {
   alt: string | null
   sort_order: number
   storage_path: string | null
+  is_deleted: boolean
+  deleted_at: string | null
   created_at: string
 }
 

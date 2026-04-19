@@ -3,9 +3,12 @@ import { NavLink } from 'react-router-dom'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/cn'
 import { env } from '@/lib/env'
+import { useCart } from '@/features/cart/useCart'
 import { publicNavigation, routes } from '@/lib/routes'
 
 export function PublicNavbar() {
+  const { itemCount } = useCart()
+
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[rgba(8,9,11,0.78)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-4 md:px-8 lg:flex-row lg:items-center lg:justify-between">
@@ -15,7 +18,7 @@ export function PublicNavbar() {
           </span>
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">
-              Máscaras contemporáneas
+              Mascaras contemporaneas
             </p>
             <p className="mt-1 text-lg font-medium tracking-[0.08em] text-[var(--foreground)]">
               {env.appName}
@@ -32,14 +35,19 @@ export function PublicNavbar() {
                 end={item.to === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'rounded-full px-4 py-2 text-sm transition',
+                    'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition',
                     isActive
                       ? 'bg-[var(--accent-soft)] text-[var(--accent)]'
                       : 'text-[var(--foreground-soft)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]',
                   )
                 }
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.to === routes.cart && itemCount > 0 ? (
+                  <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-[var(--foreground)] px-2 py-0.5 text-[10px] font-semibold text-[var(--background)]">
+                    {itemCount}
+                  </span>
+                ) : null}
               </NavLink>
             ))}
           </nav>

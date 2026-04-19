@@ -15,7 +15,9 @@ function mapProduct(row: ProductSelectRow): PublicProductSummary {
   return {
     ...row,
     category: row.categories?.[0] ?? null,
-    images: row.product_images ?? [],
+    images: (row.product_images ?? [])
+      .filter((image) => !image.is_deleted)
+      .sort((left, right) => left.sort_order - right.sort_order),
   }
 }
 
@@ -54,7 +56,7 @@ export async function listPublicProducts() {
         is_featured,
         created_at,
         categories (id, name, slug),
-        product_images (id, product_id, url, alt, sort_order, storage_path, created_at)
+        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
       `,
     )
     .eq('is_active', true)
@@ -87,7 +89,7 @@ export async function getPublicProductBySlug(slug: string) {
         is_featured,
         created_at,
         categories (id, name, slug),
-        product_images (id, product_id, url, alt, sort_order, storage_path, created_at)
+        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
       `,
     )
     .eq('slug', slug)
@@ -99,4 +101,41 @@ export async function getPublicProductBySlug(slug: string) {
   }
 
   return data ? mapProduct(data as unknown as ProductSelectRow) : null
+}
+
+export async function listPublicProductsByIds(ids: string[]) {
+  if (ids.length === 0) {
+    return []
+  }
+
+  const supabase = ensureSupabase()
+  const { data, error } = await supabase
+    .from('products')
+    .select(
+      `
+        id,
+        name,
+        slug,
+        description,
+        short_description,
+        price,
+        compare_price,
+        stock,
+        sku,
+        category_id,
+        is_active,
+        is_featured,
+        created_at,
+        categories (id, name, slug),
+        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
+      `,
+    )
+    .in('id', ids)
+    .eq('is_active', true)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return ((data ?? []) as unknown as ProductSelectRow[]).map(mapProduct)
 }

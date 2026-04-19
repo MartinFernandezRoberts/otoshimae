@@ -5,6 +5,7 @@ export const routes = {
   catalog: '/catalogo',
   cart: '/carrito',
   checkout: '/checkout',
+  checkoutSuccess: '/checkout/confirmacion',
   adminLogin: '/admin/login',
   admin: '/admin',
   adminProducts: '/admin/productos',
@@ -19,7 +20,7 @@ export function buildProductPath(slug: string) {
 
 export const publicNavigation: NavItem[] = [
   { label: 'Inicio', to: routes.home },
-  { label: 'Catálogo', to: routes.catalog },
+  { label: 'Catalogo', to: routes.catalog },
   { label: 'Carrito', to: routes.cart },
   { label: 'Checkout', to: routes.checkout },
 ]

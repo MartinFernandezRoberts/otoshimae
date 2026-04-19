@@ -1,10 +1,5 @@
 import { ensureSupabase } from '@/lib/supabase'
-import type {
-  CreateOrderInput,
-  CreateOrderResult,
-  OrderRow,
-  PublicProductSummary,
-} from '@/types/database'
+import type { CreateOrderInput, CreateOrderResult, OrderRow } from '@/types/database'
 
 export async function createOrder(input: CreateOrderInput) {
   const supabase = ensureSupabase()
@@ -26,7 +21,7 @@ export async function createOrder(input: CreateOrderInput) {
   const result = (data?.[0] ?? null) as CreateOrderResult | null
 
   if (!result) {
-    throw new Error('No se recibió la orden creada desde Supabase.')
+    throw new Error('No se recibio la orden creada desde Supabase.')
   }
 
   return result
@@ -46,16 +41,4 @@ export async function listOrdersForAdmin() {
   }
 
   return (data ?? []) as OrderRow[]
-}
-
-export function buildCheckoutItems(products: PublicProductSummary[]) {
-  return products
-    .filter((product) => product.stock > 0)
-    .slice(0, 3)
-    .map((product) => ({
-      productId: product.id,
-      quantity: 1,
-      label: `${product.name} · stock ${product.stock}`,
-      price: product.price,
-    }))
 }

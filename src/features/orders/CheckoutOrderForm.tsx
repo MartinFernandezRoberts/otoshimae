@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
@@ -7,95 +9,82 @@ import { Input } from '@/components/ui/Input'
 import { Loader } from '@/components/ui/Loader'
 import { StatusMessage } from '@/components/ui/StatusMessage'
 import { Textarea } from '@/components/ui/Textarea'
-import { listPublicProducts } from '@/features/catalog/catalog.api'
-import { buildCheckoutItems, createOrder } from '@/features/orders/orders.api'
+import { listPublicProductsByIds } from '@/features/catalog/catalog.api'
+import { useCart } from '@/features/cart/useCart'
+import { createOrder } from '@/features/orders/orders.api'
 import { formatCurrency } from '@/lib/formatCurrency'
-import type { CreateOrderInput, PublicProductSummary } from '@/types/database'
+import { routes } from '@/lib/routes'
 
 type CheckoutFormValues = {
   customerName: string
   customerEmail: string
   customerPhone: string
   notes: string
-  quantities: Record<string, number>
 }
 
-function validate(values: CheckoutFormValues, products: PublicProductSummary[]) {
+function validateForm(values: CheckoutFormValues) {
   const nextErrors: Partial<Record<keyof CheckoutFormValues, string>> = {}
   const emailPattern = /\S+@\S+\.\S+/
 
   if (values.customerName.trim().length < 3) {
-    nextErrors.customerName = 'Ingresa un nombre válido.'
+    nextErrors.customerName = 'Ingresa un nombre valido.'
   }
 
   if (!emailPattern.test(values.customerEmail.trim())) {
-    nextErrors.customerEmail = 'Ingresa un correo válido.'
-  }
-
-  const selectedItems = products.filter(
-    (product) => (values.quantities[product.id] ?? 0) > 0,
-  )
-
-  if (selectedItems.length === 0) {
-    nextErrors.quantities = 'Selecciona al menos un producto para crear la orden.'
-  }
-
-  for (const product of selectedItems) {
-    const quantity = values.quantities[product.id] ?? 0
-
-    if (quantity > product.stock) {
-      nextErrors.quantities = `La cantidad de ${product.name} supera el stock disponible.`
-      break
-    }
+    nextErrors.customerEmail = 'Ingresa un correo valido.'
   }
 
   return nextErrors
 }
 
 export function CheckoutOrderForm() {
-  const [products, setProducts] = useState<PublicProductSummary[]>([])
-  const [loadingProducts, setLoadingProducts] = useState(true)
-  const [loadError, setLoadError] = useState<string | null>(null)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [fieldErrors, setFieldErrors] = useState<
-    Partial<Record<keyof CheckoutFormValues, string>>
-  >({})
+  const navigate = useNavigate()
+  const { items, subtotal, clearCart, reconcileWithProducts } = useCart()
   const [values, setValues] = useState<CheckoutFormValues>({
     customerName: '',
     customerEmail: '',
     customerPhone: '',
     notes: '',
-    quantities: {},
   })
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof CheckoutFormValues, string>>
+  >({})
+  const [loadingProducts, setLoadingProducts] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
+
+  const itemIds = useMemo(() => items.map((item) => item.productId), [items])
+  const itemIdsKey = useMemo(() => itemIds.slice().sort().join(','), [itemIds])
+  const idsForSync = useMemo(
+    () => (itemIdsKey ? itemIdsKey.split(',') : []),
+    [itemIdsKey],
+  )
 
   useEffect(() => {
+    if (!itemIdsKey) {
+      return
+    }
+
     let cancelled = false
 
-    const loadProducts = async () => {
+    const syncCheckoutItems = async () => {
       try {
-        const nextProducts = await listPublicProducts()
+        setLoadingProducts(true)
+        setLoadError(null)
+
+        const products = await listPublicProductsByIds(idsForSync)
 
         if (!cancelled) {
-          setProducts(nextProducts)
-          const defaults = buildCheckoutItems(nextProducts).reduce<
-            Record<string, number>
-          >((accumulator, item) => {
-            accumulator[item.productId] = item.quantity
-            return accumulator
-          }, {})
-          setValues((current) => ({
-            ...current,
-            quantities: Object.keys(current.quantities).length > 0
-              ? current.quantities
-              : defaults,
-          }))
+          reconcileWithProducts(products)
         }
-      } catch (error) {
+      } catch (nextError) {
         if (!cancelled) {
           setLoadError(
-            error instanceof Error ? error.message : 'No se pudo cargar el catálogo.',
+            nextError instanceof Error
+              ? nextError.message
+              : 'No fue posible validar el stock para el checkout.',
           )
         }
       } finally {
@@ -105,90 +94,107 @@ export function CheckoutOrderForm() {
       }
     }
 
-    void loadProducts()
+    void syncCheckoutItems()
 
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [idsForSync, itemIdsKey, reconcileWithProducts, reloadKey])
 
-  const selectedItems = useMemo(
-    () =>
-      products
-        .filter((product) => (values.quantities[product.id] ?? 0) > 0)
-        .map((product) => ({
-          productId: product.id,
-          quantity: values.quantities[product.id] ?? 0,
-          product,
-        })),
-    [products, values.quantities],
-  )
-
-  const total = selectedItems.reduce(
-    (accumulator, item) => accumulator + item.product.price * item.quantity,
-    0,
-  )
-
-  const handleQuantityChange = (productId: string, nextValue: number) => {
-    setValues((current) => ({
-      ...current,
-      quantities: {
-        ...current.quantities,
-        [productId]: Math.max(0, nextValue),
-      },
-    }))
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSubmitError(null)
-    setSubmitSuccess(null)
 
-    const nextErrors = validate(values, products)
-    setFieldErrors(nextErrors)
+    const nextFieldErrors = validateForm(values)
+    setFieldErrors(nextFieldErrors)
 
-    if (Object.keys(nextErrors).length > 0) {
+    if (Object.keys(nextFieldErrors).length > 0) {
       return
     }
 
-    const payload: CreateOrderInput = {
-      customerName: values.customerName.trim(),
-      customerEmail: values.customerEmail.trim(),
-      customerPhone: values.customerPhone.trim(),
-      notes: values.notes.trim(),
-      items: selectedItems.map((item) => ({
-        productId: item.productId,
-        quantity: item.quantity,
-      })),
+    if (items.length === 0) {
+      setSubmitError('Tu carrito esta vacio.')
+      return
     }
 
     try {
       setSubmitting(true)
-      const result = await createOrder(payload)
-      setSubmitSuccess(
-        `Orden ${result.order_number} creada correctamente por ${formatCurrency(result.total)}.`,
+
+      const refreshedProducts = await listPublicProductsByIds(itemIds)
+      const productsById = new Map(
+        refreshedProducts.map((product) => [product.id, product]),
       )
-      setValues({
-        customerName: '',
-        customerEmail: '',
-        customerPhone: '',
-        notes: '',
-        quantities: {},
+
+      reconcileWithProducts(refreshedProducts)
+
+      const unavailableItem = items.find(
+        (item) => !productsById.has(item.productId),
+      )
+
+      if (unavailableItem) {
+        setSubmitError(
+          'Actualizamos tu carrito porque una de las piezas ya no esta disponible.',
+        )
+        return
+      }
+
+      const stockConflict = items.find((item) => {
+        const product = productsById.get(item.productId)
+        return (product?.stock ?? 0) < item.quantity
       })
-      setFieldErrors({})
-    } catch (error) {
+
+      if (stockConflict) {
+        setSubmitError(
+          `Actualizamos tu carrito porque ${stockConflict.name} ya no tiene ese stock.`,
+        )
+        return
+      }
+
+      const result = await createOrder({
+        customerName: values.customerName.trim(),
+        customerEmail: values.customerEmail.trim(),
+        customerPhone: values.customerPhone.trim(),
+        notes: values.notes.trim(),
+        items: items.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      })
+
+      clearCart()
+
+      navigate(`${routes.checkoutSuccess}?orden=${encodeURIComponent(result.order_number)}`, {
+        replace: true,
+        state: {
+          orderNumber: result.order_number,
+          total: result.total,
+        },
+      })
+    } catch (nextError) {
       setSubmitError(
-        error instanceof Error ? error.message : 'No se pudo crear la orden.',
+        nextError instanceof Error
+          ? nextError.message
+          : 'No fue posible crear la orden.',
       )
     } finally {
       setSubmitting(false)
     }
   }
 
+  if (items.length === 0) {
+    return (
+      <EmptyState
+        title="No hay piezas para confirmar"
+        description="Agrega productos al carrito antes de iniciar el checkout."
+        action={<Button to={routes.catalog}>Explorar catalogo</Button>}
+      />
+    )
+  }
+
   if (loadingProducts) {
     return (
       <Card className="p-8">
-        <Loader label="Cargando productos desde Supabase..." />
+        <Loader label="Validando stock y precios..." />
       </Card>
     )
   }
@@ -196,17 +202,13 @@ export function CheckoutOrderForm() {
   if (loadError) {
     return (
       <EmptyState
-        title="No se pudo iniciar el checkout"
+        title="No se pudo preparar el checkout"
         description={loadError}
-      />
-    )
-  }
-
-  if (products.length === 0) {
-    return (
-      <EmptyState
-        title="No hay productos activos"
-        description="Activa al menos un producto en Supabase para probar la creación de órdenes."
+        action={
+          <Button variant="secondary" onClick={() => setReloadKey((value) => value + 1)}>
+            Reintentar
+          </Button>
+        }
       />
     )
   }
@@ -240,7 +242,7 @@ export function CheckoutOrderForm() {
           placeholder="cliente@email.com"
         />
         <Input
-          label="Teléfono"
+          label="Telefono"
           value={values.customerPhone}
           onChange={(event) =>
             setValues((current) => ({
@@ -259,72 +261,53 @@ export function CheckoutOrderForm() {
               notes: event.target.value,
             }))
           }
-          placeholder="Instrucciones para el pedido o contexto adicional."
+          placeholder="Instrucciones para la entrega o contexto adicional."
         />
 
         {submitError ? <StatusMessage tone="error" message={submitError} /> : null}
-        {submitSuccess ? (
-          <StatusMessage tone="success" message={submitSuccess} />
-        ) : null}
       </Card>
 
-      <Card className="space-y-4 p-6">
+      <Card className="space-y-5 p-6">
         <div className="space-y-2">
-          <h2 className="text-3xl text-[var(--foreground)]">Productos</h2>
+          <h2 className="text-3xl text-[var(--foreground)]">Resumen del pedido</h2>
           <p className="text-sm leading-7 text-[var(--foreground-soft)]">
-            Para este MVP, el checkout crea órdenes reales en Supabase a partir de
-            productos activos.
+            La orden guardara un snapshot del nombre y precio de cada producto al
+            momento de confirmar.
           </p>
         </div>
 
         <div className="space-y-3">
-          {products.map((product) => {
-            const quantity = values.quantities[product.id] ?? 0
-
-            return (
-              <div
-                key={product.id}
-                className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--background-soft)] p-4"
-              >
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-medium text-[var(--foreground)]">{product.name}</p>
-                    <p className="text-sm text-[var(--muted)]">
-                      {formatCurrency(product.price)} · stock {product.stock}
-                    </p>
-                  </div>
-                  <Input
-                    label="Cantidad"
-                    type="number"
-                    min={0}
-                    max={product.stock}
-                    value={quantity.toString()}
-                    onChange={(event) =>
-                      handleQuantityChange(product.id, Number(event.target.value))
-                    }
-                    className="max-w-24"
-                  />
+          {items.map((item) => (
+            <div
+              key={item.productId}
+              className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--background-soft)] p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-medium text-[var(--foreground)]">{item.name}</p>
+                  <p className="mt-1 text-sm text-[var(--muted)]">
+                    {item.quantity} x {formatCurrency(item.price)}
+                  </p>
                 </div>
+                <p className="text-sm text-[var(--foreground)]">
+                  {formatCurrency(item.price * item.quantity)}
+                </p>
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
-
-        {fieldErrors.quantities ? (
-          <StatusMessage tone="error" message={fieldErrors.quantities} />
-        ) : null}
 
         <div className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] p-4">
           <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
-            Total estimado
+            Total
           </p>
           <p className="mt-3 text-3xl text-[var(--accent)]">
-            {formatCurrency(total)}
+            {formatCurrency(subtotal)}
           </p>
         </div>
 
         <Button type="submit" className="w-full" loading={submitting}>
-          Crear orden
+          Confirmar orden
         </Button>
       </Card>
     </form>

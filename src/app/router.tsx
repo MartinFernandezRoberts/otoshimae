@@ -13,6 +13,7 @@ import { AdminSettingsPage } from '@/pages/AdminSettingsPage'
 import { CartPage } from '@/pages/CartPage'
 import { CatalogPage } from '@/pages/CatalogPage'
 import { CheckoutPage } from '@/pages/CheckoutPage'
+import { CheckoutSuccessPage } from '@/pages/CheckoutSuccessPage'
 import { HomePage } from '@/pages/HomePage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ProductDetailPage } from '@/pages/ProductDetailPage'
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: 'producto/:slug', element: <ProductDetailPage /> },
       { path: 'carrito', element: <CartPage /> },
       { path: 'checkout', element: <CheckoutPage /> },
+      { path: 'checkout/confirmacion', element: <CheckoutSuccessPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
