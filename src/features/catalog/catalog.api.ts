@@ -6,9 +6,12 @@ import type {
   PublicProductSummary,
 } from '@/types/database'
 
+type ProductImageSelectRow = Omit<ProductImageRow, 'is_deleted' | 'deleted_at'> &
+  Partial<Pick<ProductImageRow, 'is_deleted' | 'deleted_at'>>
+
 type ProductSelectRow = ProductRow & {
   categories: Array<Pick<CategoryRow, 'id' | 'name' | 'slug'>> | null
-  product_images: ProductImageRow[] | null
+  product_images: ProductImageSelectRow[] | null
 }
 
 type CacheEntry<T> = {
@@ -27,11 +30,20 @@ function isCacheFresh<T>(entry: CacheEntry<T> | null) {
   return Boolean(entry && entry.expiresAt > Date.now())
 }
 
+function normalizeProductImage(image: ProductImageSelectRow): ProductImageRow {
+  return {
+    ...image,
+    is_deleted: image.is_deleted ?? false,
+    deleted_at: image.deleted_at ?? null,
+  }
+}
+
 function mapProduct(row: ProductSelectRow): PublicProductSummary {
   return {
     ...row,
     category: row.categories?.[0] ?? null,
     images: (row.product_images ?? [])
+      .map(normalizeProductImage)
       .filter((image) => !image.is_deleted)
       .sort((left, right) => left.sort_order - right.sort_order),
   }
@@ -72,7 +84,7 @@ async function fetchPublicProducts() {
         is_featured,
         created_at,
         categories (id, name, slug),
-        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
+        product_images (id, product_id, url, alt, sort_order, storage_path, created_at)
       `,
     )
     .eq('is_active', true)
@@ -153,7 +165,7 @@ export async function getPublicProductBySlug(slug: string) {
         is_featured,
         created_at,
         categories (id, name, slug),
-        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
+        product_images (id, product_id, url, alt, sort_order, storage_path, created_at)
       `,
     )
     .eq('slug', slug)
@@ -191,7 +203,7 @@ export async function listPublicProductsByIds(ids: string[]) {
         is_featured,
         created_at,
         categories (id, name, slug),
-        product_images (id, product_id, url, alt, sort_order, storage_path, is_deleted, deleted_at, created_at)
+        product_images (id, product_id, url, alt, sort_order, storage_path, created_at)
       `,
     )
     .in('id', ids)

@@ -22,6 +22,21 @@ type SettingsUpsertInput = Array<{
   description: string
 }>
 
+type AdminProductImageSelect = Omit<AdminProductImage, 'is_deleted' | 'deleted_at'> &
+  Partial<Pick<AdminProductImage, 'is_deleted' | 'deleted_at'>>
+
+type AdminProductRecordSelect = Omit<AdminProductRecord, 'product_images'> & {
+  product_images: AdminProductImageSelect[] | null
+}
+
+function normalizeAdminProductImage(image: AdminProductImageSelect): AdminProductImage {
+  return {
+    ...image,
+    is_deleted: image.is_deleted ?? false,
+    deleted_at: image.deleted_at ?? null,
+  }
+}
+
 export async function listAdminCategories() {
   const supabase = ensureSupabase()
   const { data, error } = await supabase
@@ -103,9 +118,7 @@ export async function listAdminProducts() {
           alt,
           sort_order,
           storage_path,
-          created_at,
-          is_deleted,
-          deleted_at
+          created_at
         )
       `,
     )
@@ -115,7 +128,10 @@ export async function listAdminProducts() {
     throw new Error(error.message)
   }
 
-  return (data ?? []) as unknown as AdminProductRecord[]
+  return ((data ?? []) as unknown as AdminProductRecordSelect[]).map((product) => ({
+    ...product,
+    product_images: product.product_images?.map(normalizeAdminProductImage) ?? null,
+  }))
 }
 
 export async function createProduct(values: ProductInput) {
@@ -252,6 +268,12 @@ export async function markProductImageAsDeleted(image: AdminProductImage) {
     .eq('id', image.id)
 
   if (error) {
+    if (error.code === '42703') {
+      throw new Error(
+        'La base remota todavia no tiene las columnas de eliminacion logica en product_images. Ejecuta la migracion 20260418_000002_product_images_soft_delete.sql y vuelve a intentar.',
+      )
+    }
+
     throw new Error(error.message)
   }
 }

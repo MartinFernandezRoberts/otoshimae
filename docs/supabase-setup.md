@@ -9,28 +9,32 @@ Esta base deja el proyecto preparado para usar Supabase como backend del MVP.
    - `Project URL`
    - `Publishable key`
 
-## 2. Ejecutar la migración SQL
+## 2. Ejecutar las migraciones SQL
 
-Usa el archivo:
+Ejecuta todos los archivos dentro de `supabase/migrations/` en orden:
 
 ```text
 supabase/migrations/20260418_000001_init_mvp.sql
+supabase/migrations/20260418_000002_product_images_soft_delete.sql
+supabase/migrations/20260421_000003_fix_admin_rls_recursion.sql
 ```
 
-Puedes correrlo desde:
+Puedes correrlos desde:
 
 - SQL Editor de Supabase
-- Supabase CLI si más adelante conectas el repo con `supabase link`
+- Supabase CLI si mas adelante conectas el repo con `supabase link`
 
-La migración crea:
+Las migraciones crean y corrigen:
 
 - tablas del MVP
 - tipos enum para estados de pedido e inventario
-- políticas RLS
+- politicas RLS
 - bucket `product-images`
-- función RPC `create_order_with_items`
+- funcion RPC `create_order_with_items`
+- columnas de eliminacion logica para `product_images`
+- funcion segura para comprobar permisos admin sin recursion de RLS
 
-## 3. Configurar autenticación
+## 3. Configurar autenticacion
 
 En `Authentication > Providers`:
 
@@ -40,13 +44,13 @@ En `Authentication > Providers`:
 En `Authentication > URL Configuration`:
 
 - `Site URL` local: `http://localhost:5173`
-- agrega también tu dominio de Vercel cuando lo tengas
+- agrega tambien tu dominio de Vercel cuando lo tengas
 
 ## 4. Crear el primer administrador
 
 Primero crea el usuario desde Supabase Auth o desde el login si habilitas sign up por fuera del panel.
 
-Luego promuévelo en SQL:
+Luego promuevelo en SQL:
 
 ```sql
 insert into public.admin_users (id, email, full_name, role)
@@ -62,7 +66,7 @@ set email = excluded.email,
 
 El acceso a `/admin` depende de dos cosas:
 
-- tener sesión válida en Supabase Auth
+- tener sesion valida en Supabase Auth
 - existir en `public.admin_users` con `is_active = true`
 
 ## 5. Configurar variables de entorno
@@ -90,26 +94,26 @@ En `Project Settings > Environment Variables` agrega estas claves:
 - Opcional:
   - `VITE_APP_NAME`
 
-## 6. Bucket de imágenes
+## 6. Bucket de imagenes
 
-La migración intenta crear el bucket `product-images`.
+La migracion intenta crear el bucket `product-images`.
 
 Verifica en `Storage` que:
 
 - exista el bucket
-- esté público si quieres usar `getPublicUrl`
+- este publico si quieres usar `getPublicUrl`
 
-## 7. Qué quedó listo en frontend
+## 7. Que quedo listo en frontend
 
 - cliente reusable de Supabase en `src/lib/supabase.ts`
 - auth admin con guard de rutas
-- login admin real con email y contraseña
-- APIs de frontend para categorías, productos, banners, settings y órdenes
+- login admin real con email y contrasena
+- APIs de frontend para categorias, productos, banners, settings y ordenes
 - checkout conectado a la RPC `create_order_with_items`
 
 ## 8. Supuestos de esta base
 
-- no hay pagos todavía
-- la creación de órdenes descuenta stock automáticamente
-- `site_settings` está pensada para valores públicos de la tienda, no secretos
-- `product_variants` e `inventory_movements` quedan preparados aunque el storefront todavía no los explota visualmente
+- no hay pagos todavia
+- la creacion de ordenes descuenta stock automaticamente
+- `site_settings` esta pensada para valores publicos de la tienda, no secretos
+- `product_variants` e `inventory_movements` quedan preparados aunque el storefront todavia no los explota visualmente
