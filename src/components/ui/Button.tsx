@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import { cn } from '@/lib/cn'
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
 type SharedButtonProps = {
@@ -35,16 +35,14 @@ function getButtonStyles({
   className,
 }: Pick<SharedButtonProps, 'variant' | 'size' | 'className'>) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-full border font-semibold tracking-[0.02em] transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:pointer-events-none disabled:opacity-55',
-    variant === 'primary' &&
-      'border-[rgba(240,220,194,0.24)] bg-[linear-gradient(135deg,var(--foreground)_0%,var(--accent-strong)_100%)] text-[var(--background)] shadow-[0_18px_40px_rgba(240,220,194,0.14)] hover:brightness-[1.03]',
-    variant === 'secondary' &&
-      'border-[var(--line-strong)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground)] hover:border-[rgba(209,178,138,0.42)] hover:bg-[rgba(209,178,138,0.08)] hover:text-[var(--accent-strong)]',
-    variant === 'ghost' &&
-      'border-transparent bg-transparent text-[var(--foreground-soft)] hover:border-[var(--line)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]',
-    size === 'sm' && 'px-4 py-2.5 text-[13px]',
-    size === 'md' && 'px-5 py-3.5 text-[14px]',
-    size === 'lg' && 'px-6 py-4 text-[15px]',
+    'ui-button',
+    variant === 'primary' && 'ui-button-primary',
+    variant === 'secondary' && 'ui-button-secondary',
+    variant === 'ghost' && 'ui-button-ghost',
+    variant === 'destructive' && 'ui-button-destructive',
+    size === 'sm' && 'ui-button-sm',
+    size === 'md' && 'ui-button-md',
+    size === 'lg' && 'ui-button-lg',
     className,
   )
 }

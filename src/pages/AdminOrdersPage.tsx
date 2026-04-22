@@ -99,11 +99,11 @@ export function AdminOrdersPage() {
             <Card key={order.id} tone="admin" className="space-y-5 p-5">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-2">
-                  <h2 className="text-3xl text-white">{order.order_number}</h2>
-                  <p className="text-sm text-slate-300">
+                  <h2 className="text-3xl text-[var(--foreground)]">{order.order_number}</h2>
+                  <p className="text-sm text-[var(--foreground-soft)]">
                     {order.customer_name} · {order.customer_email}
                   </p>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-[var(--muted)]">
                     Creado: {formatDate(order.created_at)}
                   </p>
                 </div>
@@ -130,21 +130,21 @@ export function AdminOrdersPage() {
                 </div>
               </div>
 
-              <div className="grid gap-3 text-sm text-slate-200 md:grid-cols-3">
+              <div className="grid gap-3 text-sm text-[var(--foreground-soft)] md:grid-cols-3">
                 <p>Total: {formatCurrency(Number(order.total))}</p>
                 <p>Subtotal: {formatCurrency(Number(order.subtotal))}</p>
                 <p>Ítems: {order.order_items?.length ?? 0}</p>
               </div>
 
               {order.notes ? (
-                <p className="text-sm leading-7 text-slate-300/80">{order.notes}</p>
+                <p className="text-sm leading-7 text-[var(--muted)]">{order.notes}</p>
               ) : null}
 
               <div className="space-y-3">
                 {(order.order_items ?? []).map((item) => (
                   <div
                     key={item.id}
-                    className="rounded-[var(--radius-sm)] border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200"
+                    className="ui-surface-inset rounded-[var(--radius-sm)] px-4 py-3 text-sm text-[var(--foreground-soft)]"
                   >
                     <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                       <span>{item.product_name_snapshot}</span>

@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/Card'
-import type { CategoryRow, ProductRow } from '@/types/database'
 import type { AdminOrderRecord } from '@/features/admin/admin.types'
+import type { CategoryRow, ProductRow } from '@/types/database'
 
 type AdminMetricsPanelProps = {
   categories: CategoryRow[]
@@ -18,9 +18,9 @@ export function AdminMetricsPanel({
 
   const metrics = [
     {
-      label: 'Categorías',
+      label: 'Categorias',
       value: categories.length,
-      detail: 'Estructuras activas para ordenar catálogo.',
+      detail: 'Estructuras activas para ordenar catalogo.',
     },
     {
       label: 'Productos',
@@ -35,7 +35,7 @@ export function AdminMetricsPanel({
     {
       label: 'Pedidos pendientes',
       value: pendingOrders,
-      detail: 'Órdenes esperando confirmación.',
+      detail: 'Ordenes esperando confirmacion.',
     },
   ]
 
@@ -43,9 +43,9 @@ export function AdminMetricsPanel({
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {metrics.map((metric) => (
         <Card key={metric.label} tone="admin" className="p-5">
-          <p className="text-sm text-slate-300">{metric.label}</p>
-          <p className="mt-3 text-4xl text-white">{metric.value}</p>
-          <p className="mt-3 text-sm leading-6 text-slate-300/80">{metric.detail}</p>
+          <p className="text-sm text-[var(--foreground-soft)]">{metric.label}</p>
+          <p className="mt-3 text-4xl text-[var(--foreground)]">{metric.value}</p>
+          <p className="mt-3 text-sm leading-6 text-[var(--muted)]">{metric.detail}</p>
         </Card>
       ))}
     </div>

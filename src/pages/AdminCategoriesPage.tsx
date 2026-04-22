@@ -197,9 +197,9 @@ export function AdminCategoriesPage() {
           {categories.map((category) => (
             <Card key={category.id} as="article" tone="admin" className="space-y-4 p-5">
               <div className="space-y-2">
-                <h2 className="text-3xl text-white">{category.name}</h2>
-                <p className="text-sm text-slate-300">/{category.slug}</p>
-                <p className="text-sm leading-7 text-slate-300/80">
+                <h2 className="text-3xl text-[var(--foreground)]">{category.name}</h2>
+                <p className="text-sm text-[var(--foreground-soft)]">/{category.slug}</p>
+                <p className="text-sm leading-7 text-[var(--muted)]">
                   {category.description || 'Sin descripción'}
                 </p>
               </div>

@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Loader } from '@/components/ui/Loader'
 import { StatusMessage } from '@/components/ui/StatusMessage'
+import { Tabs } from '@/components/ui/Tabs'
 import { getPublicProductBySlug } from '@/features/catalog/catalog.api'
 import { useCart } from '@/features/cart/useCart'
 import { useSeo } from '@/hooks/useSeo'
@@ -125,6 +127,71 @@ export function ProductDetailPage() {
     [],
   )
 
+  const purchaseNotes = useMemo(
+    () => [
+      `Disponibilidad actual: ${
+        (product?.stock ?? 0) > 0 ? `${product?.stock ?? 0} piezas activas` : 'serie agotada'
+      }.`,
+      `Categoria: ${product?.category?.name ?? 'coleccion libre'}.`,
+      'La orden se registra con snapshot de precio y nombre para asegurar trazabilidad.',
+    ],
+    [product?.category?.name, product?.stock],
+  )
+
+  const tabs = useMemo(
+    () => [
+      {
+        value: 'atelier',
+        label: 'Atelier',
+        content: (
+          <div className="space-y-3">
+            {atelierNotes.map((note) => (
+              <div
+                key={note}
+                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+              >
+                {note}
+              </div>
+            ))}
+          </div>
+        ),
+      },
+      {
+        value: 'cuidado',
+        label: 'Cuidado',
+        content: (
+          <div className="space-y-3">
+            {careNotes.map((note) => (
+              <div
+                key={note}
+                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+              >
+                {note}
+              </div>
+            ))}
+          </div>
+        ),
+      },
+      {
+        value: 'compra',
+        label: 'Compra',
+        content: (
+          <div className="space-y-3">
+            {purchaseNotes.map((note) => (
+              <div
+                key={note}
+                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+              >
+                {note}
+              </div>
+            ))}
+          </div>
+        ),
+      },
+    ],
+    [atelierNotes, careNotes, purchaseNotes],
+  )
+
   const handleAddToCart = () => {
     if (!product) {
       return
@@ -172,6 +239,14 @@ export function ProductDetailPage() {
 
   return (
     <div className="space-y-12">
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', to: routes.home },
+          { label: 'Catalogo', to: routes.catalog },
+          { label: product.name },
+        ]}
+      />
+
       <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
         <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
           <div className="space-y-5">
@@ -298,7 +373,7 @@ export function ProductDetailPage() {
             </Card>
           </div>
 
-          <div className="space-y-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4">
+          <div className="ui-surface-inset space-y-3 rounded-[var(--radius-md)] p-4">
             <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
               Cantidad
             </p>
@@ -344,40 +419,15 @@ export function ProductDetailPage() {
         </Card>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
-        <Card className="space-y-5 p-7">
-          <div className="space-y-2">
-            <Badge>Detalles del atelier</Badge>
-            <h2 className="text-4xl text-[var(--foreground)]">Materialidad y gesto</h2>
-          </div>
-          <div className="space-y-3">
-            {atelierNotes.map((note) => (
-              <div
-                key={note}
-                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        </Card>
+      <section className="space-y-5">
+        <div className="space-y-2">
+          <Badge>Detalles de la pieza</Badge>
+          <h2 className="text-4xl text-[var(--foreground)] md:text-5xl">
+            Materialidad, cuidado y contexto de compra
+          </h2>
+        </div>
 
-        <Card tone="muted" className="space-y-5 p-7">
-          <div className="space-y-2">
-            <Badge variant="accent">Cuidado y compra</Badge>
-            <h2 className="text-4xl text-[var(--foreground)]">Antes de confirmar</h2>
-          </div>
-          <div className="space-y-3">
-            {careNotes.map((note) => (
-              <div
-                key={note}
-                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        </Card>
+        <Tabs items={tabs} />
       </section>
     </div>
   )

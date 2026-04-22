@@ -48,7 +48,7 @@ export function CheckoutSuccessPage() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-5">
+              <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                   Numero de orden
                 </p>
@@ -57,7 +57,7 @@ export function CheckoutSuccessPage() {
                 </p>
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-5">
+              <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                   Total registrado
                 </p>
@@ -92,7 +92,7 @@ export function CheckoutSuccessPage() {
                   {nextSteps.map((step) => (
                     <div
                       key={step}
-                      className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+                      className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
                     >
                       {step}
                     </div>

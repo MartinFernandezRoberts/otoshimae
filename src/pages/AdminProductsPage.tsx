@@ -342,16 +342,16 @@ export function AdminProductsPage() {
             return (
               <Card key={product.id} tone="admin" className="space-y-5 p-5">
                 <div className="space-y-2">
-                  <h2 className="text-3xl text-white">{product.name}</h2>
-                  <p className="text-sm text-slate-300">
+                  <h2 className="text-3xl text-[var(--foreground)]">{product.name}</h2>
+                  <p className="text-sm text-[var(--foreground-soft)]">
                     /{product.slug} · {product.categories?.[0]?.name ?? 'Sin categoría'}
                   </p>
-                  <p className="text-sm leading-7 text-slate-300/80">
+                  <p className="text-sm leading-7 text-[var(--muted)]">
                     {product.short_description || product.description || 'Sin descripción'}
                   </p>
                 </div>
 
-                <div className="grid gap-3 text-sm text-slate-200 md:grid-cols-2">
+                <div className="grid gap-3 text-sm text-[var(--foreground-soft)] md:grid-cols-2">
                   <p>Precio: {formatCurrency(Number(product.price))}</p>
                   <p>Stock: {product.stock}</p>
                   <p>SKU: {product.sku || 'Sin SKU'}</p>

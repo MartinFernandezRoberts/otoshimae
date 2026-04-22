@@ -10,18 +10,17 @@ export function AdminSidebar() {
   const { adminUser, signOut } = useAuth()
 
   return (
-    <aside className="border-b border-white/10 px-6 py-8 lg:border-b-0 lg:border-r">
+    <aside className="border-b border-[var(--border)] bg-[rgba(7,7,7,0.72)] px-6 py-8 backdrop-blur-xl lg:border-b-0 lg:border-r">
       <div className="space-y-4">
-        <Badge variant="outline" className="text-cyan-50/80">
-          Panel Otoshimae
-        </Badge>
+        <Badge variant="accent">Panel Otoshimae</Badge>
         <div className="space-y-2">
-          <h1 className="text-4xl text-white">Admin</h1>
-          <p className="max-w-xs text-sm leading-7 text-slate-300">
-            Acceso protegido con Supabase Auth y validación sobre la tabla admin_users.
+          <h1 className="text-4xl text-[var(--foreground)]">Admin</h1>
+          <p className="max-w-xs text-sm leading-8 text-[var(--foreground-soft)]">
+            Acceso protegido con Supabase Auth y validacion sobre la tabla
+            admin_users.
           </p>
           {adminUser?.email ? (
-            <p className="text-sm text-slate-400">{adminUser.email}</p>
+            <p className="text-sm text-[var(--muted)]">{adminUser.email}</p>
           ) : null}
         </div>
       </div>
@@ -34,10 +33,10 @@ export function AdminSidebar() {
             end={item.to === '/admin'}
             className={({ isActive }) =>
               cn(
-                'rounded-[var(--radius-sm)] px-4 py-3 text-sm font-medium transition',
+                'rounded-[var(--radius-sm)] border px-4 py-3 text-sm font-medium transition',
                 isActive
-                  ? 'bg-white text-[var(--admin)]'
-                  : 'text-slate-200 hover:bg-white/8',
+                  ? 'border-[rgba(184,138,95,0.24)] bg-[rgba(184,138,95,0.12)] text-[var(--accent-strong)]'
+                  : 'border-transparent text-[var(--foreground-soft)] hover:border-[var(--border)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]',
               )
             }
           >
@@ -46,13 +45,16 @@ export function AdminSidebar() {
         ))}
       </nav>
 
-      <div className="mt-8 rounded-[var(--radius-lg)] border border-white/10 bg-white/5 p-5">
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-          Sesión actual
+      <div className="ui-surface-inset mt-8 rounded-[var(--radius-lg)] p-5">
+        <p className="text-[11px] uppercase tracking-[0.28em] text-[var(--muted)]">
+          Sesion actual
         </p>
-        <p className="mt-3 text-2xl text-white">{adminUser?.role ?? 'admin'}</p>
-        <p className="mt-2 text-sm leading-7 text-slate-300">
-          La autorización depende de Supabase Auth más la tabla pública de administradores.
+        <p className="mt-3 text-2xl text-[var(--foreground)]">
+          {adminUser?.role ?? 'admin'}
+        </p>
+        <p className="mt-2 text-sm leading-7 text-[var(--foreground-soft)]">
+          La autorizacion depende de Supabase Auth mas la tabla publica de
+          administradores.
         </p>
         <Button
           variant="secondary"
@@ -62,7 +64,7 @@ export function AdminSidebar() {
             void signOut()
           }}
         >
-          Cerrar sesión
+          Cerrar sesion
         </Button>
       </div>
     </aside>

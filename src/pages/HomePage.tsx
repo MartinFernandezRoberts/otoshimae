@@ -264,7 +264,7 @@ export function HomePage() {
               </div>
 
               <div className="absolute bottom-6 left-6 right-6 grid gap-4 md:grid-cols-2">
-                <Card tone="muted" className="border-white/10 bg-[rgba(0,0,0,0.42)] p-5">
+                <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Precio atelier
                   </p>
@@ -272,7 +272,7 @@ export function HomePage() {
                     {formatCurrency(heroProduct.price)}
                   </p>
                 </Card>
-                <Card tone="muted" className="border-white/10 bg-[rgba(0,0,0,0.42)] p-5">
+                <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Disponibilidad
                   </p>
@@ -363,7 +363,7 @@ export function HomePage() {
               {latestProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[rgba(245,240,232,0.08)] bg-[rgba(255,255,255,0.03)] p-4 md:flex-row md:items-center md:justify-between"
+                  className="ui-surface-inset flex flex-col gap-3 rounded-[var(--radius-md)] p-4 md:flex-row md:items-center md:justify-between"
                 >
                   <div>
                     <p className="text-lg text-[var(--foreground)]">{product.name}</p>

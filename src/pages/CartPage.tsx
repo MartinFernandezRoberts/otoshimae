@@ -217,7 +217,7 @@ export function CartPage() {
                     </button>
                   </div>
 
-                  <div className="flex flex-wrap items-end justify-between gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4">
+                  <div className="ui-surface-inset flex flex-wrap items-end justify-between gap-4 rounded-[var(--radius-md)] p-4">
                     <div>
                       <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                         Precio unitario
@@ -253,11 +253,11 @@ export function CartPage() {
             </div>
 
             <div className="grid gap-3">
-              <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+              <div className="ui-surface-inset flex items-center justify-between rounded-[var(--radius-md)] p-4 text-sm text-[var(--foreground-soft)]">
                 <span>Piezas distintas</span>
                 <span>{items.length}</span>
               </div>
-              <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+              <div className="ui-surface-inset flex items-center justify-between rounded-[var(--radius-md)] p-4 text-sm text-[var(--foreground-soft)]">
                 <span>Unidades</span>
                 <span>{totalUnits}</span>
               </div>

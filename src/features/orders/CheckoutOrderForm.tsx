@@ -323,13 +323,13 @@ export function CheckoutOrderForm() {
         </div>
 
         <div className="grid gap-3 md:grid-cols-2">
-          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+          <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm text-[var(--foreground-soft)]">
             <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
               Piezas
             </p>
             <p className="mt-3 text-2xl text-[var(--foreground)]">{items.length}</p>
           </div>
-          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+          <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm text-[var(--foreground-soft)]">
             <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
               Unidades
             </p>
@@ -341,7 +341,7 @@ export function CheckoutOrderForm() {
           {items.map((item) => (
             <div
               key={item.productId}
-              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4"
+              className="ui-surface-inset rounded-[var(--radius-md)] p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>

@@ -43,13 +43,13 @@ export function NotFoundPage() {
                   Sugerencias
                 </p>
                 <div className="space-y-3">
-                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
                     Revisa si el enlace fue escrito correctamente.
                   </div>
-                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
                     Vuelve a la portada para navegar desde la seleccion principal.
                   </div>
-                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
                     Si la pieza existia antes, puede haber sido retirada del catalogo.
                   </div>
                 </div>

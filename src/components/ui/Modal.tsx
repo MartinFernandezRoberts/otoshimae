@@ -60,7 +60,7 @@ export function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(3,4,6,0.72)] px-4 py-8 backdrop-blur-sm"
+      className="ui-modal-backdrop"
       onClick={handleBackdropClick}
       role="presentation"
     >
@@ -69,7 +69,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={headingId}
         aria-describedby={description ? descriptionId : undefined}
-        className="shadow-floating w-full max-w-2xl rounded-[var(--radius-xl)] border border-[var(--line)] bg-[var(--background-strong)] p-6"
+        className="ui-modal-panel p-6 md:p-7"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
@@ -90,7 +90,7 @@ export function Modal({
             type="button"
             onClick={onClose}
             aria-label="Cerrar modal"
-            className="inline-flex items-center justify-center rounded-full px-4 py-2 text-sm text-[var(--foreground-soft)] transition hover:bg-[rgba(255,255,255,0.04)] hover:text-[var(--foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+            className="ui-button ui-button-ghost ui-button-sm"
           >
             Cerrar
           </button>
