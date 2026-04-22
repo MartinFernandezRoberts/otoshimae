@@ -20,13 +20,13 @@ import type { CategoryRow, PublicProductSummary } from '@/types/database'
 
 type SortOption = 'featured' | 'recent' | 'price-asc' | 'price-desc' | 'name'
 
-const sortOptions = [
-  { value: 'featured', label: 'Destacados primero' },
+const sortOptions: Array<{ value: SortOption; label: string }> = [
+  { value: 'featured', label: 'Curaduria principal' },
   { value: 'recent', label: 'Mas recientes' },
   { value: 'price-asc', label: 'Precio ascendente' },
   { value: 'price-desc', label: 'Precio descendente' },
   { value: 'name', label: 'Nombre A-Z' },
-] as const
+]
 
 function sortProducts(products: PublicProductSummary[], sort: SortOption) {
   const nextProducts = [...products]
@@ -73,7 +73,7 @@ export function CatalogPage() {
   useSeo({
     title: 'Catalogo',
     description:
-      'Explora el catalogo activo de Otoshimae con filtros por categoria, busqueda por nombre y stock en tiempo real.',
+      'Explora el catalogo de Otoshimae con una presentacion editorial, filtros por categoria y stock real para cada pieza activa.',
   })
 
   useEffect(() => {
@@ -126,37 +126,63 @@ export function CatalogPage() {
     return sortProducts(nextProducts, sort)
   }, [category, deferredSearch, products, sort])
 
-  const selectedCategoryLabel =
-    category === 'all'
-      ? 'Todas'
-      : categories.find((item) => item.slug === category)?.name ?? 'Categoria'
+  const categoryOptions = useMemo(
+    () => [
+      { value: 'all', label: 'Todas las categorias' },
+      ...categories.map((item) => ({
+        value: item.slug,
+        label: item.name,
+      })),
+    ],
+    [categories],
+  )
+
+  const selectedCategory = categories.find((item) => item.slug === category) ?? null
+  const selectedCategoryLabel = selectedCategory?.name ?? 'Toda la coleccion'
+  const selectedSortLabel =
+    sortOptions.find((item) => item.value === sort)?.label ?? 'Curaduria principal'
+  const featuredCount = products.filter((product) => product.is_featured).length
+  const availableCount = products.filter((product) => product.stock > 0).length
+  const hasActiveFilters =
+    search.trim().length > 0 || category !== 'all' || sort !== 'featured'
+
+  const clearFilters = () => {
+    setSearch('')
+    setCategory('all')
+    setSort('featured')
+  }
 
   const filterControls = (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div className="space-y-5">
       <Input
         label="Buscar"
-        placeholder="Nombre de la pieza"
+        placeholder="Nombre de la pieza o referencia visual"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
+        hint="Busca por nombre, descripcion o matiz de la pieza."
       />
       <Select
         label="Categoria"
         value={category}
         onChange={(event) => setCategory(event.target.value)}
-        options={[
-          { value: 'all', label: 'Todas las categorias' },
-          ...categories.map((item) => ({
-            value: item.slug,
-            label: item.name,
-          })),
-        ]}
+        options={categoryOptions}
+        hint="Filtra el catalogo por familia visual."
       />
       <Select
         label="Orden"
         value={sort}
         onChange={(event) => setSort(event.target.value as SortOption)}
-        options={[...sortOptions]}
+        options={sortOptions}
+        hint="Prioriza curaduria, novedad, nombre o precio."
       />
+
+      <Button
+        variant="ghost"
+        className="w-full justify-center"
+        onClick={clearFilters}
+      >
+        Limpiar filtros
+      </Button>
     </div>
   )
 
@@ -186,80 +212,172 @@ export function CatalogPage() {
     return (
       <EmptyState
         title="No hay productos activos"
-        description="Publica al menos un producto desde el panel admin para mostrarlo en el storefront."
+        description="Publica al menos una pieza desde el panel admin para revelar el catalogo del storefront."
       />
     )
   }
 
   return (
-    <>
-      <section className="space-y-6">
-        <div className="flex flex-col gap-6 rounded-[var(--radius-xl)] border border-[var(--line)] bg-[var(--surface-strong)] p-8 shadow-[var(--shadow-card)] lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-4">
-            <Badge variant="accent">Catalogo</Badge>
-            <h1 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
-              Una cuadrilla limpia para dejar que el producto respire.
+    <div className="space-y-12">
+      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.72)] shadow-[var(--shadow-card)]">
+        <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
+          <div className="space-y-5">
+            <Badge variant="accent">Catalogo Otoshimae</Badge>
+            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
+              Una coleccion curada para dejar que cada pieza imponga presencia.
             </h1>
-            <p className="max-w-3xl text-base leading-8 text-[var(--foreground-soft)]">
-              Catalogo conectado a Supabase con busqueda por nombre, filtros por
-              categoria y stock real para cada pieza publicada.
+            <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
+              Aqui el producto manda: contraste alto, lectura limpia y filtros
+              suficientes para descubrir mascaras, collares y accesorios sin perder
+              la sensacion de marca de autor.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Badge>{filteredProducts.length} resultados</Badge>
-            <Button
-              variant="secondary"
-              className="md:hidden"
-              onClick={() => setFiltersOpen(true)}
-            >
-              Abrir filtros
-            </Button>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card tone="muted" className="p-5">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                Piezas publicadas
+              </p>
+              <p className="mt-4 text-4xl text-[var(--foreground)]">
+                {products.length.toString().padStart(2, '0')}
+              </p>
+            </Card>
+            <Card tone="muted" className="p-5">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                Atelier picks
+              </p>
+              <p className="mt-4 text-4xl text-[var(--foreground)]">
+                {featuredCount.toString().padStart(2, '0')}
+              </p>
+            </Card>
+            <Card tone="muted" className="p-5">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                Con stock
+              </p>
+              <p className="mt-4 text-4xl text-[var(--foreground)]">
+                {availableCount.toString().padStart(2, '0')}
+              </p>
+            </Card>
           </div>
-        </div>
-
-        <div className="hidden md:block">{filterControls}</div>
-
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="outline">Busqueda: {search || 'sin texto'}</Badge>
-          <Badge variant="outline">Categoria: {selectedCategoryLabel}</Badge>
-          <Badge variant="outline">
-            Orden: {sortOptions.find((item) => item.value === sort)?.label}
-          </Badge>
         </div>
       </section>
 
-      <section className="mt-10">
-        {filteredProducts.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+      <section className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <aside className="hidden lg:block">
+          <Card className="sticky top-32 space-y-6 p-6">
+            <div className="space-y-2">
+              <Badge>Filtros</Badge>
+              <h2 className="text-4xl text-[var(--foreground)]">Curaduria</h2>
+              <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+                Ajusta la vista para descubrir familias visuales, series activas y
+                piezas destacadas sin salir del lenguaje premium de la tienda.
+              </p>
+            </div>
+
+            {filterControls}
+
+            <div className="editorial-divider" />
+
+            <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
+              <p>Pintado a mano y detalle visible.</p>
+              <p>Series cortas con stock real.</p>
+              <p>Estetica japonesa contemporanea con lectura editorial.</p>
+            </div>
+          </Card>
+        </aside>
+
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 lg:hidden">
+            <Badge variant="outline">{filteredProducts.length} piezas visibles</Badge>
+            <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
+              Abrir filtros
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className={`rounded-full border px-4 py-2 text-sm transition ${
+                category === 'all'
+                  ? 'border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.1)] text-[var(--accent-strong)]'
+                  : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[var(--line-strong)] hover:text-[var(--foreground)]'
+              }`}
+              onClick={() => setCategory('all')}
+            >
+              Todo
+            </button>
+            {categories.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`rounded-full border px-4 py-2 text-sm transition ${
+                  category === item.slug
+                    ? 'border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.1)] text-[var(--accent-strong)]'
+                    : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[var(--line-strong)] hover:text-[var(--foreground)]'
+                }`}
+                onClick={() => setCategory(item.slug)}
+              >
+                {item.name}
+              </button>
             ))}
           </div>
-        ) : (
-          <EmptyState
-            title="No encontramos piezas con esos filtros"
-            description="Prueba otra busqueda o vuelve a una categoria mas amplia para seguir explorando el catalogo."
-            action={
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  setSearch('')
-                  setCategory('all')
-                  setSort('featured')
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            }
-          />
-        )}
+
+          <Card tone="muted" className="p-5">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="space-y-2">
+                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                  Vista actual
+                </p>
+                <p className="text-2xl text-[var(--foreground)]">
+                  {selectedCategoryLabel}
+                </p>
+                <p className="text-sm leading-7 text-[var(--foreground-soft)]">
+                  {selectedCategory?.description ??
+                    'Recorre toda la coleccion para descubrir el universo completo de Otoshimae.'}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <Badge variant="outline">Busqueda: {search || 'sin texto'}</Badge>
+                <Badge variant="outline">Orden: {selectedSortLabel}</Badge>
+                <Badge variant="outline">{filteredProducts.length} resultados</Badge>
+              </div>
+            </div>
+
+            {hasActiveFilters ? (
+              <div className="mt-4">
+                <Button variant="ghost" size="sm" onClick={clearFilters}>
+                  Restablecer vista
+                </Button>
+              </div>
+            ) : null}
+          </Card>
+
+          {filteredProducts.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="No encontramos piezas con esos filtros"
+              description="Prueba con otra busqueda, vuelve a una categoria mas amplia o recupera la curaduria principal del catalogo."
+              action={
+                <Button variant="secondary" onClick={clearFilters}>
+                  Limpiar filtros
+                </Button>
+              }
+            />
+          )}
+        </div>
       </section>
 
       <Modal
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
-        title="Filtros de catalogo"
-        description="Controles rapidos para ajustar la vista en pantallas pequenas."
+        title="Filtros del catalogo"
+        description="Ajusta categoria, texto y orden para explorar la coleccion."
         footer={
           <Button variant="secondary" onClick={() => setFiltersOpen(false)}>
             Aplicar
@@ -268,6 +386,6 @@ export function CatalogPage() {
       >
         {filterControls}
       </Modal>
-    </>
+    </div>
   )
 }

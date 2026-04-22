@@ -1,27 +1,68 @@
-import { Link } from 'react-router-dom'
-
-import { PagePlaceholder } from '@/components/PagePlaceholder'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { useSeo } from '@/hooks/useSeo'
 import { routes } from '@/lib/routes'
 
 export function NotFoundPage() {
+  useSeo({
+    title: 'Pagina no encontrada',
+    description:
+      'La ruta solicitada no existe dentro del storefront publico de Otoshimae.',
+  })
+
   return (
-    <PagePlaceholder
-      eyebrow="404"
-      title="Página no encontrada"
-      description="La ruta existe como base del SPA, pero este destino todavía no fue definido dentro del proyecto."
-      actions={
-        <Link
-          to={routes.home}
-          className="inline-flex rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent-deep)]"
-        >
-          Volver al inicio
-        </Link>
-      }
-    >
-      <div className="rounded-[28px] border border-[var(--line)] bg-[var(--surface-strong)] p-6 text-sm leading-7 text-[var(--muted)]">
-        El rewrite de Vercel ya quedó configurado para que React Router pueda
-        resolver este tipo de rutas del lado del cliente.
-      </div>
-    </PagePlaceholder>
+    <section className="mx-auto max-w-5xl">
+      <Card className="overflow-hidden p-0">
+        <div className="grid gap-0 lg:grid-cols-[1.02fr_0.98fr]">
+          <div className="space-y-6 p-8 md:p-10">
+            <Badge variant="accent">404</Badge>
+            <div className="space-y-4">
+              <h1 className="text-6xl text-[var(--foreground)] md:text-7xl">
+                Esta ruta no forma parte del universo Otoshimae.
+              </h1>
+              <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
+                El storefront sigue activo, pero este destino no existe o ya no
+                esta publicado. Puedes volver al inicio o abrir el catalogo para
+                seguir explorando la coleccion.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Button to={routes.home}>Volver al inicio</Button>
+              <Button to={routes.catalog} variant="secondary">
+                Abrir catalogo
+              </Button>
+            </div>
+          </div>
+
+          <div className="border-t border-[var(--line)] bg-[linear-gradient(145deg,#171310_0%,#070707_100%)] lg:border-l lg:border-t-0">
+            <div className="flex h-full flex-col justify-between gap-8 p-8 md:p-10">
+              <div className="space-y-4">
+                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                  Sugerencias
+                </p>
+                <div className="space-y-3">
+                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                    Revisa si el enlace fue escrito correctamente.
+                  </div>
+                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                    Vuelve a la portada para navegar desde la seleccion principal.
+                  </div>
+                  <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+                    Si la pieza existia antes, puede haber sido retirada del catalogo.
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-sm leading-7 text-[var(--foreground-soft)]">
+                El rewrite de Vercel permanece listo para que React Router resuelva
+                correctamente las rutas publicas del storefront.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </section>
   )
 }

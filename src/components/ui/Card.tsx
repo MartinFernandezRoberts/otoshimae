@@ -10,11 +10,11 @@ type CardProps = PropsWithChildren<{
 
 const cardTones: Record<NonNullable<CardProps['tone']>, string> = {
   default:
-    'border border-[var(--line)] bg-[var(--surface-strong)] text-[var(--foreground)]',
+    'border-[var(--line)] bg-[linear-gradient(180deg,rgba(20,18,16,0.94)_0%,rgba(9,8,8,0.98)_100%)] text-[var(--foreground)]',
   muted:
-    'border border-[var(--line)] bg-[var(--surface)] text-[var(--foreground-soft)]',
+    'border-[rgba(245,240,232,0.07)] bg-[linear-gradient(180deg,rgba(18,16,15,0.8)_0%,rgba(11,10,10,0.9)_100%)] text-[var(--foreground-soft)]',
   accent:
-    'border border-[rgba(207,183,154,0.18)] bg-[linear-gradient(180deg,rgba(207,183,154,0.14),rgba(255,255,255,0.02))] text-[var(--foreground)]',
+    'border-[rgba(209,178,138,0.22)] bg-[linear-gradient(180deg,rgba(209,178,138,0.16)_0%,rgba(18,14,11,0.96)_40%,rgba(9,8,8,0.99)_100%)] text-[var(--foreground)]',
   admin:
     'border border-white/10 bg-white/5 text-white',
 }
@@ -31,7 +31,7 @@ export function Card({
   return (
     <Component
       className={cn(
-        'shadow-card rounded-[var(--radius-lg)] p-6',
+        'shadow-card relative overflow-hidden rounded-[var(--radius-lg)] p-6',
         cardTones[tone],
         className,
       )}

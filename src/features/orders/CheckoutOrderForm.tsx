@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -65,6 +66,10 @@ export function CheckoutOrderForm() {
   const idsForSync = useMemo(
     () => (itemIdsKey ? itemIdsKey.split(',') : []),
     [itemIdsKey],
+  )
+  const totalUnits = useMemo(
+    () => items.reduce((total, item) => total + item.quantity, 0),
+    [items],
   )
 
   useEffect(() => {
@@ -220,78 +225,123 @@ export function CheckoutOrderForm() {
 
   return (
     <form
-      className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]"
+      className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]"
       onSubmit={handleSubmit}
       noValidate
     >
-      <Card className="space-y-5 p-6">
-        <Input
-          label="Nombre"
-          value={values.customerName}
-          onChange={(event) =>
-            setValues((current) => ({
-              ...current,
-              customerName: event.target.value,
-            }))
-          }
-          error={fieldErrors.customerName}
-          placeholder="Nombre y apellido"
-        />
-        <Input
-          label="Correo"
-          type="email"
-          value={values.customerEmail}
-          onChange={(event) =>
-            setValues((current) => ({
-              ...current,
-              customerEmail: event.target.value,
-            }))
-          }
-          error={fieldErrors.customerEmail}
-          placeholder="cliente@email.com"
-        />
-        <Input
-          label="Telefono"
-          value={values.customerPhone}
-          onChange={(event) =>
-            setValues((current) => ({
-              ...current,
-              customerPhone: event.target.value,
-            }))
-          }
-          placeholder="+56 9 1234 5678"
-          autoComplete="tel"
-          error={fieldErrors.customerPhone}
-        />
-        <Textarea
-          label="Notas"
-          value={values.notes}
-          onChange={(event) =>
-            setValues((current) => ({
-              ...current,
-              notes: event.target.value,
-            }))
-          }
-          placeholder="Instrucciones para la entrega o contexto adicional."
-        />
+      <div className="space-y-6">
+        <Card className="space-y-6 p-6 md:p-7">
+          <div className="space-y-2">
+            <Badge variant="accent">Datos de contacto</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">Tu informacion</h2>
+            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+              Usaremos estos datos para registrar la orden y continuar la
+              coordinacion del encargo desde el panel administrativo.
+            </p>
+          </div>
 
-        {submitError ? <StatusMessage tone="error" message={submitError} /> : null}
-      </Card>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Input
+              label="Nombre"
+              value={values.customerName}
+              onChange={(event) =>
+                setValues((current) => ({
+                  ...current,
+                  customerName: event.target.value,
+                }))
+              }
+              error={fieldErrors.customerName}
+              placeholder="Nombre y apellido"
+              hint="Este nombre quedara asociado a la orden."
+            />
+            <Input
+              label="Correo"
+              type="email"
+              value={values.customerEmail}
+              onChange={(event) =>
+                setValues((current) => ({
+                  ...current,
+                  customerEmail: event.target.value,
+                }))
+              }
+              error={fieldErrors.customerEmail}
+              placeholder="cliente@email.com"
+              hint="Usaremos este correo como referencia principal."
+            />
+            <Input
+              label="Telefono"
+              value={values.customerPhone}
+              onChange={(event) =>
+                setValues((current) => ({
+                  ...current,
+                  customerPhone: event.target.value,
+                }))
+              }
+              placeholder="+56 9 1234 5678"
+              autoComplete="tel"
+              error={fieldErrors.customerPhone}
+              hint="Opcional, pero util para coordinar el encargo."
+            />
+          </div>
+        </Card>
 
-      <Card className="space-y-5 p-6">
+        <Card tone="muted" className="space-y-5 p-6 md:p-7">
+          <div className="space-y-2">
+            <Badge>Notas del encargo</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">Contexto adicional</h2>
+            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+              Si necesitas dejar una referencia de entrega, timing o detalle del
+              pedido, este es el lugar.
+            </p>
+          </div>
+
+          <Textarea
+            label="Notas"
+            value={values.notes}
+            onChange={(event) =>
+              setValues((current) => ({
+                ...current,
+                notes: event.target.value,
+              }))
+            }
+            placeholder="Instrucciones para la entrega o contexto adicional."
+            hint="Opcional. Se guardara junto con la orden."
+          />
+
+          {submitError ? <StatusMessage tone="error" message={submitError} /> : null}
+        </Card>
+      </div>
+
+      <Card as="aside" className="sticky top-32 space-y-6 p-6 md:p-7">
         <div className="space-y-2">
-          <h2 className="text-3xl text-[var(--foreground)]">Resumen del pedido</h2>
-          <p className="text-sm leading-7 text-[var(--foreground-soft)]">
+          <Badge variant="accent">Resumen</Badge>
+          <h2 className="text-4xl text-[var(--foreground)]">Tu orden final</h2>
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
             La orden guardara un snapshot del nombre y precio de cada producto al
             momento de confirmar.
           </p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+              Piezas
+            </p>
+            <p className="mt-3 text-2xl text-[var(--foreground)]">{items.length}</p>
+          </div>
+          <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm text-[var(--foreground-soft)]">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+              Unidades
+            </p>
+            <p className="mt-3 text-2xl text-[var(--foreground)]">{totalUnits}</p>
+          </div>
         </div>
 
         <div className="space-y-3">
           {items.map((item) => (
             <div
               key={item.productId}
-              className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--background-soft)] p-4"
+              className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -308,13 +358,18 @@ export function CheckoutOrderForm() {
           ))}
         </div>
 
-        <div className="rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface)] p-4">
-          <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
+        <div className="rounded-[var(--radius-md)] border border-[rgba(209,178,138,0.22)] bg-[rgba(209,178,138,0.08)] p-5">
+          <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
             Total
           </p>
-          <p className="mt-3 text-3xl text-[var(--accent)]">
+          <p className="mt-4 text-5xl text-[var(--accent-strong)]">
             {formatCurrency(subtotal)}
           </p>
+        </div>
+
+        <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
+          <p>Volveremos a revisar stock justo antes de cerrar la orden.</p>
+          <p>En esta etapa no se procesa pago; solo se registra el pedido.</p>
         </div>
 
         <Button type="submit" className="w-full" loading={submitting}>

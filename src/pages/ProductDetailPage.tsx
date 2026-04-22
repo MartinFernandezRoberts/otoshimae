@@ -32,7 +32,7 @@ export function ProductDetailPage() {
     description:
       product?.short_description ??
       product?.description ??
-      'Detalle de producto Otoshimae con imagenes, stock real y compra directa.',
+      'Detalle de producto Otoshimae con galeria, stock real y una presentacion premium lista para compra.',
   })
 
   useEffect(() => {
@@ -86,6 +86,45 @@ export function ProductDetailPage() {
     [product?.stock, quantity],
   )
 
+  const productFacts = useMemo(
+    () => [
+      {
+        label: 'Categoria',
+        value: product?.category?.name ?? 'Coleccion libre',
+      },
+      {
+        label: 'Disponibilidad',
+        value:
+          (product?.stock ?? 0) > 0
+            ? `${product?.stock ?? 0} piezas activas`
+            : 'Serie agotada',
+      },
+      {
+        label: 'Acabado',
+        value: 'Pintado a mano y afinado en taller',
+      },
+    ],
+    [product?.category?.name, product?.stock],
+  )
+
+  const atelierNotes = useMemo(
+    () => [
+      'Construccion pensada para verse de cerca, con contraste, textura y silueta definida.',
+      'Algunas piezas incorporan pelo agregado manualmente para reforzar presencia y caracter.',
+      'La disponibilidad se sincroniza con stock real para sostener la sensacion de exclusividad.',
+    ],
+    [],
+  )
+
+  const careNotes = useMemo(
+    () => [
+      'Ideal para styling editorial, coleccion personal o presencia decorativa con caracter.',
+      'Evita contacto prolongado con humedad o sol directo para conservar pintura y terminaciones.',
+      'El checkout valida nuevamente stock y precio antes de crear la orden final.',
+    ],
+    [],
+  )
+
   const handleAddToCart = () => {
     if (!product) {
       return
@@ -125,47 +164,72 @@ export function ProductDetailPage() {
     return (
       <EmptyState
         title="Producto no encontrado"
-        description="La pieza que buscas no esta activa o ya no existe en el catalogo publico."
+        description="La pieza que buscas no esta activa o ya no existe dentro del catalogo publico."
         action={<Button to={routes.catalog}>Explorar catalogo</Button>}
       />
     )
   }
 
   return (
-    <section className="space-y-8">
-      <div className="space-y-3">
-        <div className="flex flex-wrap gap-2">
-          {product.category ? <Badge>{product.category.name}</Badge> : null}
-          <Badge variant={product.stock > 0 ? 'success' : 'danger'}>
-            {product.stock > 0 ? `Stock ${product.stock}` : 'Agotado'}
-          </Badge>
-        </div>
-        <h1 className="text-5xl text-[var(--foreground)] md:text-6xl">{product.name}</h1>
-        <p className="max-w-3xl text-base leading-8 text-[var(--foreground-soft)]">
-          {product.short_description ??
-            product.description ??
-            'Pieza publicada en el catalogo de Otoshimae.'}
-        </p>
-      </div>
+    <div className="space-y-12">
+      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
+        <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
+          <div className="space-y-5">
+            <div className="flex flex-wrap gap-2">
+              {product.category ? <Badge variant="accent">{product.category.name}</Badge> : null}
+              <Badge variant={product.stock > 0 ? 'success' : 'danger'}>
+                {product.stock > 0 ? `${product.stock} disponibles` : 'Serie agotada'}
+              </Badge>
+            </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
+              {product.name}
+            </h1>
+
+            <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
+              {product.short_description ??
+                product.description ??
+                'Pieza publicada en el catalogo de Otoshimae con lectura premium y stock en tiempo real.'}
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {productFacts.map((fact) => (
+              <Card key={fact.label} tone="muted" className="p-5">
+                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                  {fact.label}
+                </p>
+                <p className="mt-4 text-lg leading-7 text-[var(--foreground)]">
+                  {fact.value}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#15171b_0%,#08090b_100%)] shadow-[var(--shadow-card)]">
+          <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)]">
             {mainImage ? (
               <img
                 src={mainImage.url}
                 alt={mainImage.alt ?? product.name}
-                className="h-[480px] w-full object-cover"
+                className="h-[560px] w-full object-cover"
                 loading="eager"
                 fetchPriority="high"
               />
             ) : (
-              <div className="h-[480px] bg-[radial-gradient(circle_at_50%_18%,rgba(207,183,154,0.16),transparent_24%),linear-gradient(145deg,#15171b_0%,#08090b_100%)]" />
+              <div className="flex h-[560px] items-center justify-center bg-[radial-gradient(circle_at_50%_18%,rgba(209,178,138,0.16),transparent_24%),linear-gradient(145deg,#161210_0%,#060606_100%)]">
+                <span className="text-6xl font-semibold tracking-[0.24em] text-[rgba(245,240,232,0.14)]">
+                  O
+                </span>
+              </div>
             )}
           </div>
 
           {gallery.length > 1 ? (
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
               {gallery.map((image) => (
                 <button
                   key={image.id}
@@ -174,7 +238,7 @@ export function ProductDetailPage() {
                   aria-pressed={image.id === mainImage?.id}
                   className={`overflow-hidden rounded-[var(--radius-md)] border transition ${
                     image.id === mainImage?.id
-                      ? 'border-[var(--accent)]'
+                      ? 'border-[rgba(209,178,138,0.42)] shadow-[0_0_0_1px_rgba(209,178,138,0.18)]'
                       : 'border-[var(--line)]'
                   }`}
                   onClick={() => setSelectedImage(image)}
@@ -182,7 +246,7 @@ export function ProductDetailPage() {
                   <img
                     src={image.url}
                     alt={image.alt ?? product.name}
-                    className="h-24 w-full object-cover"
+                    className="h-28 w-full object-cover"
                     loading="lazy"
                     decoding="async"
                   />
@@ -192,50 +256,69 @@ export function ProductDetailPage() {
           ) : null}
         </div>
 
-        <Card as="aside" className="space-y-6 p-7">
+        <Card as="aside" className="space-y-6 p-7 md:p-8">
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
               {product.sku ? `SKU ${product.sku}` : 'Pieza Otoshimae'}
             </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <p className="text-4xl text-[var(--accent)]">
+            <div className="flex flex-wrap items-end gap-3">
+              <p className="text-5xl text-[var(--accent-strong)]">
                 {formatCurrency(product.price)}
               </p>
               {hasComparePrice ? (
-                <span className="text-base text-[var(--muted)] line-through">
+                <span className="pb-1 text-base text-[var(--muted)] line-through">
                   {formatCurrency(product.compare_price ?? 0)}
                 </span>
               ) : null}
             </div>
           </div>
 
-          <p className="text-base leading-7 text-[var(--foreground-soft)]">
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
             {product.description ??
               product.short_description ??
-              'Ficha de producto conectada a Supabase con stock real e imagenes activas.'}
+              'Ficha de producto conectada a Supabase con stock real, imagenes activas y checkout inmediato.'}
           </p>
 
-          <div className="space-y-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface)] p-4">
-            <p className="text-xs uppercase tracking-[0.24em] text-[var(--muted)]">
+          <div className="grid gap-3 md:grid-cols-2">
+            <Card tone="muted" className="p-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                Construccion
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
+                Pintura manual con criterio de contraste y silueta.
+              </p>
+            </Card>
+            <Card tone="muted" className="p-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                Presencia
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
+                Pensada para styling, coleccion o exhibicion con fuerza visual.
+              </p>
+            </Card>
+          </div>
+
+          <div className="space-y-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
               Cantidad
             </p>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 aria-label="Disminuir cantidad"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[var(--accent)]"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                 disabled={product.stock <= 0}
               >
                 -
               </button>
-              <div className="min-w-28 rounded-full border border-[var(--line)] px-4 py-3 text-center text-sm text-[var(--foreground)]">
+              <div className="min-w-32 rounded-full border border-[var(--line)] px-4 py-3 text-center text-sm text-[var(--foreground)]">
                 {quantityLabel}
               </div>
               <button
                 type="button"
                 aria-label="Aumentar cantidad"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[var(--accent)]"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
                 onClick={() =>
                   setQuantity((value) => Math.min(product.stock, value + 1))
                 }
@@ -250,20 +333,52 @@ export function ProductDetailPage() {
             <StatusMessage tone={feedback.tone} message={feedback.message} />
           ) : null}
 
-          <div className="flex flex-wrap gap-3">
-            <Button
-              className="flex-1"
-              onClick={handleAddToCart}
-              disabled={product.stock <= 0}
-            >
-              {product.stock > 0 ? 'Agregar al carrito' : 'Sin stock'}
+          <div className="grid gap-3">
+            <Button onClick={handleAddToCart} disabled={product.stock <= 0}>
+              {product.stock > 0 ? 'Agregar pieza al carrito' : 'Sin stock'}
             </Button>
-            <Button to={routes.cart} variant="secondary" className="flex-1">
+            <Button to={routes.cart} variant="secondary">
               Ver carrito
             </Button>
           </div>
         </Card>
-      </div>
-    </section>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2">
+        <Card className="space-y-5 p-7">
+          <div className="space-y-2">
+            <Badge>Detalles del atelier</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">Materialidad y gesto</h2>
+          </div>
+          <div className="space-y-3">
+            {atelierNotes.map((note) => (
+              <div
+                key={note}
+                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+              >
+                {note}
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card tone="muted" className="space-y-5 p-7">
+          <div className="space-y-2">
+            <Badge variant="accent">Cuidado y compra</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">Antes de confirmar</h2>
+          </div>
+          <div className="space-y-3">
+            {careNotes.map((note) => (
+              <div
+                key={note}
+                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(255,255,255,0.03)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+              >
+                {note}
+              </div>
+            ))}
+          </div>
+        </Card>
+      </section>
+    </div>
   )
 }

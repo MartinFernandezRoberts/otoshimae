@@ -20,13 +20,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <label className="block space-y-2">
         {label ? (
-          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--foreground-soft)]">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-soft)]">
             {label}
           </span>
         ) : null}
         <span
           className={cn(
-            'flex gap-3 rounded-[var(--radius-sm)] border bg-[var(--background-soft)] px-4 py-3 transition focus-within:border-[var(--accent)]',
+            'flex gap-3 rounded-[var(--radius-sm)] border bg-[rgba(255,255,255,0.03)] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition focus-within:border-[var(--accent)] focus-within:shadow-[0_0_0_1px_var(--accent-glow)]',
             error ? 'border-[rgba(212,134,114,0.4)]' : 'border-[var(--line)]',
           )}
         >
@@ -43,8 +43,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             {...props}
           />
         </span>
-        {hint ? (
-          <span id={hintId} className="block text-sm text-[var(--muted)]">
+      {hint ? (
+          <span id={hintId} className="block text-sm leading-6 text-[var(--muted)]">
             {hint}
           </span>
         ) : null}

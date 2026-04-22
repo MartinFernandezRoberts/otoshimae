@@ -35,16 +35,16 @@ function getButtonStyles({
   className,
 }: Pick<SharedButtonProps, 'variant' | 'size' | 'className'>) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-full font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:pointer-events-none disabled:opacity-55',
+    'inline-flex items-center justify-center gap-2 rounded-full border font-semibold tracking-[0.02em] transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:pointer-events-none disabled:opacity-55',
     variant === 'primary' &&
-      'bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--accent)]',
+      'border-[rgba(240,220,194,0.24)] bg-[linear-gradient(135deg,var(--foreground)_0%,var(--accent-strong)_100%)] text-[var(--background)] shadow-[0_18px_40px_rgba(240,220,194,0.14)] hover:brightness-[1.03]',
     variant === 'secondary' &&
-      'border border-[var(--line-strong)] bg-[var(--surface-strong)] text-[var(--foreground)] hover:border-[var(--accent)] hover:text-[var(--accent)]',
+      'border-[var(--line-strong)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground)] hover:border-[rgba(209,178,138,0.42)] hover:bg-[rgba(209,178,138,0.08)] hover:text-[var(--accent-strong)]',
     variant === 'ghost' &&
-      'bg-transparent text-[var(--foreground-soft)] hover:bg-[rgba(255,255,255,0.04)] hover:text-[var(--foreground)]',
-    size === 'sm' && 'px-4 py-2 text-sm',
-    size === 'md' && 'px-5 py-3 text-sm',
-    size === 'lg' && 'px-6 py-3.5 text-[15px]',
+      'border-transparent bg-transparent text-[var(--foreground-soft)] hover:border-[var(--line)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]',
+    size === 'sm' && 'px-4 py-2.5 text-[13px]',
+    size === 'md' && 'px-5 py-3.5 text-[14px]',
+    size === 'lg' && 'px-6 py-4 text-[15px]',
     className,
   )
 }
