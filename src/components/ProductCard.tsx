@@ -19,7 +19,7 @@ function getProductTags(product: PublicProductSummary) {
   const tags = ['Pintado a mano']
 
   if (product.is_featured) {
-    tags.push('Pieza de autor')
+    tags.push('Pieza de coleccion')
   } else {
     tags.push('Edicion artesanal')
   }
@@ -45,14 +45,14 @@ function getCollectionCopy(product: PublicProductSummary) {
     normalizedCategory.includes('mascar') ||
     normalizedCategory.includes('oni')
   ) {
-    return 'Rostro ritual de lectura contemporanea'
+    return 'Mascara decorativa de presencia ceremonial'
   }
 
   if (normalizedCategory.includes('collar')) {
-    return 'Accesorio de autor para presencia diaria'
+    return 'Collar decorativo de acento visual'
   }
 
-  return 'Objeto artesanal con firma oscura'
+  return 'Objeto ornamental con firma oscura'
 }
 
 export function ProductCard({ product }: ProductCardProps) {
@@ -76,11 +76,11 @@ export function ProductCard({ product }: ProductCardProps) {
       result.success
         ? {
             tone: 'success',
-            message: 'Pieza agregada al carrito.',
+            message: 'La pieza ya quedo dentro de tu seleccion.',
           }
         : {
             tone: 'error',
-            message: result.message ?? 'No fue posible agregar la pieza.',
+            message: result.message ?? 'No pudimos sumar esta pieza a tu seleccion.',
           },
     )
   }
@@ -130,7 +130,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
           <div className="translate-y-3 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
             <div className="inline-flex rounded-full border border-[rgba(244,237,226,0.14)] bg-[rgba(7,7,7,0.44)] px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-[var(--foreground-soft)] backdrop-blur">
-              Ver detalle y acabados
+              Ver ficha y materialidad
             </div>
           </div>
         </div>
@@ -139,12 +139,12 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="space-y-5 p-6">
         <div className="space-y-3">
           <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-            Curaduria de coleccion
+            Curaduria del atelier
           </p>
           <p className="min-h-16 text-sm leading-8 text-[var(--foreground-soft)]">
             {product.short_description ??
               product.description ??
-              'Pieza de autor con presencia japonesa contemporanea, acabado manual y composicion de boutique.'}
+              'Pieza decorativa de autor con inspiracion japonesa, trabajo manual y presencia pensada para coleccion o exhibicion.'}
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 Estado
               </p>
               <p className="mt-2 text-sm text-[var(--foreground)]">
-                {product.stock > 0 ? 'Lista para salir del taller' : 'En espera de nueva serie'}
+                {product.stock > 0 ? 'Disponible en la serie activa' : 'A la espera de nueva serie'}
               </p>
             </div>
           </div>
@@ -198,14 +198,14 @@ export function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={product.stock <= 0}
           >
-            {product.stock > 0 ? 'Agregar al carrito' : 'Sin stock'}
+            {product.stock > 0 ? 'Sumar a mi seleccion' : 'Serie agotada'}
           </Button>
           <Button
             to={buildProductPath(product.slug)}
             variant="secondary"
             className="w-full"
           >
-            Ver detalle
+            Abrir ficha
           </Button>
         </div>
       </div>

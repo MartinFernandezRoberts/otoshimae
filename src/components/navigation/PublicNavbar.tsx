@@ -20,14 +20,14 @@ export function PublicNavbar() {
               </span>
               <div className="space-y-1">
                 <p className="text-[11px] uppercase tracking-[0.38em] text-[var(--muted)]">
-                  Japanese artisan objects
+                  Objetos decorativos de autor
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <p className="text-2xl tracking-[0.22em] text-[var(--foreground)]">
                     {env.appName}
                   </p>
                   <span className="hidden rounded-full border border-[var(--line)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-[var(--foreground-soft)] md:inline-flex">
-                    Pintado a mano
+                    Series cortas
                   </span>
                 </div>
               </div>
@@ -61,7 +61,7 @@ export function PublicNavbar() {
 
               <div className="flex flex-wrap items-center gap-3">
                 <p className="hidden text-right text-[11px] uppercase tracking-[0.32em] text-[var(--muted)] lg:block">
-                  Series cortas / oscuridad elegante / detalle manual
+                  oni decorativo / pintura manual / presencia de exhibicion
                 </p>
                 <Button to={routes.adminLogin} variant="ghost" size="sm">
                   Acceso admin

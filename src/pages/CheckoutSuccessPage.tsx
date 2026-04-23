@@ -14,8 +14,8 @@ type CheckoutSuccessState = {
 
 const nextSteps = [
   'Tu orden queda registrada y disponible para gestion interna.',
-  'El numero de orden sirve como referencia dentro del panel admin.',
-  'Puedes volver al catalogo para seguir explorando otras piezas del atelier.',
+  'El numero de orden funciona como referencia de seguimiento dentro del atelier.',
+  'Puedes volver a la coleccion para seguir descubriendo otras piezas de autor.',
 ] as const
 
 export function CheckoutSuccessPage() {
@@ -27,7 +27,7 @@ export function CheckoutSuccessPage() {
   useSeo({
     title: 'Compra confirmada',
     description:
-      'Pantalla de confirmacion de compra Otoshimae con numero de orden, total registrado y siguientes pasos.',
+      'Pantalla de confirmacion Otoshimae con numero de orden, total registrado y siguientes pasos del encargo.',
   })
 
   return (
@@ -38,12 +38,12 @@ export function CheckoutSuccessPage() {
             <Badge variant="success">Orden creada</Badge>
             <div className="space-y-4">
               <h1 className="text-6xl text-[var(--foreground)] md:text-7xl">
-                Tu encargo ya entro al atelier.
+                Tu seleccion ya quedo registrada en el atelier.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
-                Recibimos tu solicitud correctamente. Desde aqui puedes volver al
-                catalogo, explorar nuevas piezas o usar la referencia de la orden
-                para seguimiento interno.
+                Recibimos tu solicitud correctamente. Desde aqui puedes volver a
+                la coleccion, descubrir nuevas piezas o conservar la referencia
+                de la orden para seguimiento interno.
               </p>
             </div>
 
@@ -53,7 +53,7 @@ export function CheckoutSuccessPage() {
                   Numero de orden
                 </p>
                 <p className="mt-4 text-2xl text-[var(--foreground)]">
-                  {orderNumber ?? 'Disponible en el panel admin'}
+                  {orderNumber ?? 'Visible en gestion interna'}
                 </p>
               </div>
 
@@ -64,13 +64,13 @@ export function CheckoutSuccessPage() {
                 <p className="mt-4 text-2xl text-[var(--accent-strong)]">
                   {typeof state?.total === 'number'
                     ? formatCurrency(state.total)
-                    : 'Disponible en el panel admin'}
+                    : 'Visible en gestion interna'}
                 </p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button to={routes.catalog}>Volver al catalogo</Button>
+              <Button to={routes.catalog}>Volver a la coleccion</Button>
               <Button to={routes.home} variant="secondary">
                 Ir al inicio
               </Button>
@@ -102,8 +102,9 @@ export function CheckoutSuccessPage() {
 
               <div className="rounded-[var(--radius-md)] border border-[rgba(209,178,138,0.22)] bg-[rgba(209,178,138,0.08)] p-5">
                 <p className="text-sm leading-7 text-[var(--foreground-soft)]">
-                  Gracias por elegir una pieza de autor. La tienda queda lista para
-                  seguir explorando nuevas mascaras, collares y accesorios.
+                  Gracias por elegir una pieza de autor. La tienda queda lista
+                  para que sigas explorando mascaras decorativas, collares
+                  ornamentales y objetos de adorno con la misma firma visual.
                 </p>
               </div>
             </div>

@@ -29,15 +29,15 @@ function validateForm(values: CheckoutFormValues) {
   const digitsOnlyPhone = values.customerPhone.replace(/\D/g, '')
 
   if (values.customerName.trim().length < 3) {
-    nextErrors.customerName = 'Ingresa un nombre valido.'
+    nextErrors.customerName = 'Escribe el nombre que debe quedar asociado al encargo.'
   }
 
   if (!emailPattern.test(values.customerEmail.trim())) {
-    nextErrors.customerEmail = 'Ingresa un correo valido.'
+    nextErrors.customerEmail = 'Necesitamos un correo valido para registrar el encargo.'
   }
 
   if (values.customerPhone.trim() && digitsOnlyPhone.length < 8) {
-    nextErrors.customerPhone = 'Ingresa un telefono valido o dejalo vacio.'
+    nextErrors.customerPhone = 'Ingresa un telefono valido o deja este campo vacio.'
   }
 
   return nextErrors
@@ -94,7 +94,7 @@ export function CheckoutOrderForm() {
           setLoadError(
             nextError instanceof Error
               ? nextError.message
-              : 'No fue posible validar el stock para el checkout.',
+              : 'No pudimos validar el stock para el cierre del encargo.',
           )
         }
       } finally {
@@ -123,7 +123,7 @@ export function CheckoutOrderForm() {
     }
 
     if (items.length === 0) {
-      setSubmitError('Tu carrito esta vacio.')
+      setSubmitError('Tu seleccion esta vacia.')
       return
     }
 
@@ -143,7 +143,7 @@ export function CheckoutOrderForm() {
 
       if (unavailableItem) {
         setSubmitError(
-          'Actualizamos tu carrito porque una de las piezas ya no esta disponible.',
+          'Actualizamos tu seleccion porque una de las piezas ya no esta disponible.',
         )
         return
       }
@@ -155,7 +155,7 @@ export function CheckoutOrderForm() {
 
       if (stockConflict) {
         setSubmitError(
-          `Actualizamos tu carrito porque ${stockConflict.name} ya no tiene ese stock.`,
+          `Actualizamos tu seleccion porque ${stockConflict.name} ya no tiene ese stock disponible.`,
         )
         return
       }
@@ -184,7 +184,7 @@ export function CheckoutOrderForm() {
       setSubmitError(
         nextError instanceof Error
           ? nextError.message
-          : 'No fue posible crear la orden.',
+          : 'No pudimos registrar la orden.',
       )
     } finally {
       setSubmitting(false)
@@ -194,9 +194,9 @@ export function CheckoutOrderForm() {
   if (items.length === 0) {
     return (
       <EmptyState
-        title="No hay piezas para confirmar"
-        description="Agrega productos al carrito antes de iniciar el checkout."
-        action={<Button to={routes.catalog}>Explorar catalogo</Button>}
+        title="No hay piezas para cerrar"
+        description="Agrega productos a tu seleccion antes de iniciar el cierre del encargo."
+        action={<Button to={routes.catalog}>Explorar la coleccion</Button>}
       />
     )
   }
@@ -204,7 +204,7 @@ export function CheckoutOrderForm() {
   if (loadingProducts) {
     return (
       <Card className="p-8">
-        <Loader label="Validando stock y precios..." />
+        <Loader label="Validando stock y valores del atelier..." />
       </Card>
     )
   }
@@ -212,11 +212,11 @@ export function CheckoutOrderForm() {
   if (loadError) {
     return (
       <EmptyState
-        title="No se pudo preparar el checkout"
+        title="No se pudo preparar el cierre"
         description={loadError}
         action={
           <Button variant="secondary" onClick={() => setReloadKey((value) => value + 1)}>
-            Reintentar
+            Intentar de nuevo
           </Button>
         }
       />
@@ -233,16 +233,16 @@ export function CheckoutOrderForm() {
         <Card className="space-y-6 p-6 md:p-7">
           <div className="space-y-2">
             <Badge variant="accent">Datos de contacto</Badge>
-            <h2 className="text-4xl text-[var(--foreground)]">Tu informacion</h2>
+            <h2 className="text-4xl text-[var(--foreground)]">Datos para registrar el encargo</h2>
             <p className="text-sm leading-8 text-[var(--foreground-soft)]">
               Usaremos estos datos para registrar la orden y continuar la
-              coordinacion del encargo desde el panel administrativo.
+              coordinacion desde gestion interna del atelier.
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             <Input
-              label="Nombre"
+              label="Nombre de referencia"
               value={values.customerName}
               onChange={(event) =>
                 setValues((current) => ({
@@ -252,10 +252,10 @@ export function CheckoutOrderForm() {
               }
               error={fieldErrors.customerName}
               placeholder="Nombre y apellido"
-              hint="Este nombre quedara asociado a la orden."
+              hint="Este nombre quedara ligado a la orden."
             />
             <Input
-              label="Correo"
+              label="Correo de contacto"
               type="email"
               value={values.customerEmail}
               onChange={(event) =>
@@ -266,10 +266,10 @@ export function CheckoutOrderForm() {
               }
               error={fieldErrors.customerEmail}
               placeholder="cliente@email.com"
-              hint="Usaremos este correo como referencia principal."
+              hint="Este correo sera la referencia principal del encargo."
             />
             <Input
-              label="Telefono"
+              label="Telefono de apoyo"
               value={values.customerPhone}
               onChange={(event) =>
                 setValues((current) => ({
@@ -280,18 +280,18 @@ export function CheckoutOrderForm() {
               placeholder="+56 9 1234 5678"
               autoComplete="tel"
               error={fieldErrors.customerPhone}
-              hint="Opcional, pero util para coordinar el encargo."
+              hint="Opcional, pero util si hace falta coordinar rapido."
             />
           </div>
         </Card>
 
         <Card tone="muted" className="space-y-5 p-6 md:p-7">
           <div className="space-y-2">
-            <Badge>Notas del encargo</Badge>
-            <h2 className="text-4xl text-[var(--foreground)]">Contexto adicional</h2>
+            <Badge>Notas para el atelier</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">Contexto de la orden</h2>
             <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-              Si necesitas dejar una referencia de entrega, timing o detalle del
-              pedido, este es el lugar.
+              Si necesitas dejar una referencia de entrega, timing o detalle de
+              presentacion, este es el lugar.
             </p>
           </div>
 
@@ -304,7 +304,7 @@ export function CheckoutOrderForm() {
                 notes: event.target.value,
               }))
             }
-            placeholder="Instrucciones para la entrega o contexto adicional."
+            placeholder="Referencia de entrega, contexto de ambientacion o indicaciones adicionales."
             hint="Opcional. Se guardara junto con la orden."
           />
 
@@ -315,9 +315,9 @@ export function CheckoutOrderForm() {
       <Card as="aside" className="sticky top-32 space-y-6 p-6 md:p-7">
         <div className="space-y-2">
           <Badge variant="accent">Resumen</Badge>
-          <h2 className="text-4xl text-[var(--foreground)]">Tu orden final</h2>
+          <h2 className="text-4xl text-[var(--foreground)]">Cierre del encargo</h2>
           <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-            La orden guardara un snapshot del nombre y precio de cada producto al
+            La orden guardara un snapshot del nombre y valor de cada pieza al
             momento de confirmar.
           </p>
         </div>
@@ -369,11 +369,11 @@ export function CheckoutOrderForm() {
 
         <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
           <p>Volveremos a revisar stock justo antes de cerrar la orden.</p>
-          <p>En esta etapa no se procesa pago; solo se registra el pedido.</p>
+          <p>En esta etapa no se procesa pago; solo se registra el encargo.</p>
         </div>
 
         <Button type="submit" className="w-full" loading={submitting}>
-          Confirmar orden
+          Registrar encargo
         </Button>
       </Card>
     </form>

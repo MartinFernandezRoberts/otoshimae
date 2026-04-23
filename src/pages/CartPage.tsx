@@ -15,18 +15,18 @@ import { routes } from '@/lib/routes'
 const cartSteps = [
   {
     label: '01',
-    title: 'Curaduria',
-    description: 'Revisa cada pieza y afina cantidades segun stock real.',
+    title: 'Seleccion',
+    description: 'Revisa cada pieza y afina cantidades segun stock real del atelier.',
   },
   {
     label: '02',
     title: 'Datos',
-    description: 'Completa el checkout con informacion clara y sin friccion.',
+    description: 'Completa el cierre con informacion clara para registrar el encargo.',
   },
   {
     label: '03',
     title: 'Confirmacion',
-    description: 'La orden se registra con snapshot de precios y productos.',
+    description: 'La orden queda registrada con snapshot de piezas y valores.',
   },
 ] as const
 
@@ -43,7 +43,7 @@ export function CartPage() {
   useSeo({
     title: 'Carrito',
     description:
-      'Revisa tu carrito Otoshimae, ajusta cantidades segun stock real y continua con un checkout premium y claro.',
+      'Revisa tu seleccion Otoshimae, ajusta cantidades segun stock real y continua hacia un cierre claro y coherente con la marca.',
   })
 
   const itemIds = useMemo(() => items.map((item) => item.productId), [items])
@@ -75,7 +75,7 @@ export function CartPage() {
           setError(
             nextError instanceof Error
               ? nextError.message
-              : 'No fue posible sincronizar el carrito.',
+              : 'No pudimos actualizar tu seleccion.',
           )
         }
       } finally {
@@ -95,9 +95,9 @@ export function CartPage() {
   if (items.length === 0) {
     return (
       <EmptyState
-        title="Tu carrito esta vacio"
-        description="Agrega piezas desde el catalogo para preparar una seleccion con presencia y luego avanzar al checkout."
-        action={<Button to={routes.catalog}>Explorar catalogo</Button>}
+        title="Tu seleccion aun esta vacia"
+        description="Explora la coleccion y agrega mascaras decorativas, collares ornamentales u objetos de adorno para comenzar tu encargo."
+        action={<Button to={routes.catalog}>Explorar la coleccion</Button>}
       />
     )
   }
@@ -109,12 +109,12 @@ export function CartPage() {
           <div className="space-y-5">
             <Badge variant="accent">Encargo en curso</Badge>
             <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
-              Revisa tu seleccion antes de pasar a confirmacion.
+              Tu seleccion ya tiene forma. Ahora toca afinarla.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
-              Este paso mantiene stock sincronizado, deja claro el total y
-              prepara una transicion natural hacia el checkout sin perder la
-              identidad premium del storefront.
+              Este paso mantiene el stock sincronizado, deja claro el valor total
+              y prepara una transicion natural hacia el cierre del encargo sin
+              perder el tono editorial del storefront.
             </p>
           </div>
 
@@ -134,7 +134,7 @@ export function CartPage() {
         </div>
       </section>
 
-      {loading ? <Loader label="Sincronizando stock real..." /> : null}
+      {loading ? <Loader label="Ajustando stock real del atelier..." /> : null}
       {error ? <StatusMessage tone="error" message={error} /> : null}
 
       <section className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
@@ -165,15 +165,15 @@ export function CartPage() {
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-2">
                         <Badge variant={item.stock > 0 ? 'success' : 'danger'}>
-                          {item.stock > 0 ? `${item.stock} disponibles` : 'Sin stock'}
+                          {item.stock > 0 ? `${item.stock} disponibles` : 'Serie agotada'}
                         </Badge>
-                        <Badge>Seleccion Otoshimae</Badge>
+                        <Badge>Seleccion del atelier</Badge>
                       </div>
                       <div>
                         <h2 className="text-4xl text-[var(--foreground)]">{item.name}</h2>
                         <p className="mt-2 text-sm leading-7 text-[var(--foreground-soft)]">
-                          Pieza en carrito con stock validado y preparada para
-                          ingresar al checkout.
+                          Pieza decorativa con stock validado y preparada para
+                          entrar al cierre del encargo.
                         </p>
                       </div>
                     </div>
@@ -183,7 +183,7 @@ export function CartPage() {
                       className="justify-start px-0 lg:justify-center"
                       onClick={() => removeItem(item.productId)}
                     >
-                      Quitar
+                      Retirar pieza
                     </Button>
                   </div>
 
@@ -245,10 +245,10 @@ export function CartPage() {
           <Card as="aside" className="sticky top-32 space-y-6 p-6 md:p-7">
             <div className="space-y-2">
               <Badge>Resumen</Badge>
-              <h2 className="text-4xl text-[var(--foreground)]">Tu orden</h2>
+              <h2 className="text-4xl text-[var(--foreground)]">Resumen del encargo</h2>
               <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-                Antes de confirmar revisaremos el stock una vez mas para mantener
-                la orden alineada con la base real.
+                Antes de registrar el cierre revisaremos el stock una vez mas
+                para mantener la orden alineada con la base real.
               </p>
             </div>
 
@@ -273,12 +273,12 @@ export function CartPage() {
             </div>
 
             <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
-              <p>Checkout claro y directo, sin pasarela de pago en esta etapa.</p>
-              <p>La orden se crea con snapshot de nombre y precio por producto.</p>
+              <p>En esta etapa no se procesa pago; solo registramos el encargo.</p>
+              <p>La orden se crea con snapshot de nombre y valor por producto.</p>
             </div>
 
             <div className="grid gap-3">
-              <Button to={routes.checkout}>Ir al checkout</Button>
+              <Button to={routes.checkout}>Continuar al cierre</Button>
               <Button to={routes.catalog} variant="secondary">
                 Seguir explorando
               </Button>
@@ -290,9 +290,9 @@ export function CartPage() {
               Nota de taller
             </p>
             <p className="mt-4 text-sm leading-8 text-[var(--foreground-soft)]">
-              La seleccion del carrito se comporta como una reserva de intencion,
-              no como una venta cerrada. Por eso el stock se vuelve a validar justo
-              antes de confirmar la orden.
+              Esta seleccion funciona como una reserva de intencion, no como una
+              venta cerrada. Por eso el stock se vuelve a validar justo antes de
+              registrar la orden.
             </p>
           </Card>
         </div>

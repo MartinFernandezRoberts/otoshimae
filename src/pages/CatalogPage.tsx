@@ -30,9 +30,9 @@ const sortOptions: Array<{ value: SortOption; label: string }> = [
 
 const collectionSignals = [
   'Pintado a mano',
-  'Edicion artesanal',
+  'Serie corta',
   'Inspiracion japonesa',
-  'Pieza de autor',
+  'Pieza decorativa',
 ] as const
 
 function sortProducts(products: PublicProductSummary[], sort: SortOption) {
@@ -67,17 +67,17 @@ function sortProducts(products: PublicProductSummary[], sort: SortOption) {
 function getCollectionHeading(category: CategoryRow | null, search: string) {
   if (search.trim()) {
     return {
-      title: 'Resultados de busqueda con curaduria activa',
+      title: 'Resultados afinados dentro del universo Otoshimae',
       description:
-        'Piezas que dialogan con tu busqueda, sin salir del universo oscuro, artesanal y cuidadosamente compuesto de Otoshimae.',
+        'Piezas que dialogan con tu busqueda sin salir del lenguaje de la marca: decorativo, artesanal, oscuro y cuidadosamente compuesto.',
     }
   }
 
   if (!category) {
     return {
-      title: 'Coleccion completa de objetos con presencia',
+      title: 'Coleccion completa de piezas decorativas con presencia propia',
       description:
-        'Explora mascaras oni, collares y accesorios de autor desde una grilla clara, elegante y pensada para dejar respirar el producto.',
+        'Explora mascaras oni decorativas, collares ornamentales y objetos de adorno desde una grilla clara, elegante y pensada para dejar respirar cada pieza.',
     }
   }
 
@@ -85,17 +85,17 @@ function getCollectionHeading(category: CategoryRow | null, search: string) {
 
   if (normalized.includes('mascar') || normalized.includes('oni')) {
     return {
-      title: 'Mascaras con dramatismo ritual y lectura contemporanea',
+      title: 'Mascaras decorativas con dramatismo ceremonial y lectura contemporanea',
       description:
-        'Rostros de impacto concebidos para coleccion, styling o exhibicion con una tension visual precisa y artesanal.',
+        'Rostros de impacto concebidos para coleccion, ambientacion o exhibicion con una tension visual precisa y artesanal.',
     }
   }
 
   if (normalized.includes('collar')) {
     return {
-      title: 'Collares de autor para un porte sobrio y distintivo',
+      title: 'Collares decorativos con acento sobrio y distintivo',
       description:
-        'Accesorios con inspiracion japonesa, contraste controlado y una presencia que se siente refinada de cerca.',
+        'Piezas ornamentales con inspiracion japonesa, contraste controlado y una presencia que se aprecia en coleccion, estilismo o exhibicion.',
     }
   }
 
@@ -103,7 +103,7 @@ function getCollectionHeading(category: CategoryRow | null, search: string) {
     title: `${category.name} dentro del universo Otoshimae`,
     description:
       category.description ??
-      'Una familia visual con identidad propia, acabados de taller y presencia boutique.',
+      'Una familia visual con identidad propia, acabados de taller y valor ornamental de boutique.',
   }
 }
 
@@ -214,7 +214,7 @@ export function CatalogPage() {
         placeholder="Nombre de la pieza, oni, collar o referencia visual"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
-        hint="Busca por nombre, descripcion o tono de la pieza."
+        hint="Busca por nombre, descripcion o atmosfera visual."
       />
       <Select
         label="Categoria"
@@ -228,12 +228,12 @@ export function CatalogPage() {
         value={sort}
         onChange={(event) => setSort(event.target.value as SortOption)}
         options={sortOptions}
-        hint="Prioriza curaduria, novedad o precio."
+        hint="Prioriza curaduria, novedad o rango de valor."
       />
 
       <div className="grid gap-3">
         <Button variant="secondary" className="w-full" onClick={clearFilters}>
-          Restablecer filtros
+          Limpiar filtros
         </Button>
       </div>
     </div>
@@ -265,7 +265,7 @@ export function CatalogPage() {
     return (
       <EmptyState
         title="No hay piezas activas en el atelier"
-        description="Publica productos desde el panel admin para revelar una coleccion con identidad, filtros y stock real."
+        description="Publica productos desde el panel admin para revelar una coleccion decorativa con identidad, filtros y stock real."
       />
     )
   }
@@ -279,12 +279,13 @@ export function CatalogPage() {
             <Badge variant="accent">Catalogo Otoshimae</Badge>
             <div className="space-y-5">
               <h1 className="max-w-5xl text-6xl text-[var(--foreground)] md:text-7xl">
-                Una coleccion de autor para mirar con calma y elegir con criterio.
+                Una coleccion de autor para mirar con calma y elegir por presencia.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
                 El catalogo prioriza contraste, aire y presencia. Aqui cada pieza
-                se presenta como parte de una curaduria oscura y premium: hecha a
-                mano, de inspiracion japonesa y con un acabado que se siente serio.
+                aparece como parte de una curaduria decorativa y premium: hecha a
+                mano, de inspiracion japonesa y con un acabado listo para
+                coleccion, ambientacion o exhibicion.
               </p>
             </div>
 
@@ -306,12 +307,12 @@ export function CatalogPage() {
                 {products.length.toString().padStart(2, '0')}
               </p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Series activas listas para exploracion y compra.
+                Series activas listas para exploracion y encargo.
               </p>
             </Card>
             <Card tone="muted" className="p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Atelier picks
+                Seleccion del atelier
               </p>
               <p className="mt-4 text-4xl text-[var(--foreground)]">
                 {featuredCount.toString().padStart(2, '0')}
@@ -328,7 +329,7 @@ export function CatalogPage() {
                 {availableCount.toString().padStart(2, '0')}
               </p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Disponibilidad real para una compra clara y directa.
+                Disponibilidad real para una seleccion clara y sin ruido.
               </p>
             </Card>
           </div>
@@ -340,10 +341,10 @@ export function CatalogPage() {
           <Card className="sticky top-32 space-y-6 p-6">
             <div className="space-y-3">
               <Badge>Filtros de coleccion</Badge>
-              <h2 className="text-4xl text-[var(--foreground)]">Curaduria limpia</h2>
+              <h2 className="text-4xl text-[var(--foreground)]">Curaduria afinada</h2>
               <p className="text-sm leading-8 text-[var(--foreground-soft)]">
                 Ajusta el catalogo sin ruido visual: una lectura clara para piezas
-                de autor, series artesanales y objetos con inspiracion japonesa.
+                decorativas de autor, series artesanales y objetos con inspiracion japonesa.
               </p>
             </div>
 
@@ -353,8 +354,8 @@ export function CatalogPage() {
 
             <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
               <p>Filtra por familia visual o por nombre de pieza.</p>
-              <p>Explora stock real sin perder el tono boutique del storefront.</p>
-              <p>Una grilla pensada para dejar que las piezas respiren.</p>
+              <p>Explora stock real sin perder el tono editorial del atelier.</p>
+              <p>Una grilla pensada para que cada objeto se lea con claridad.</p>
             </div>
           </Card>
         </aside>
@@ -363,7 +364,7 @@ export function CatalogPage() {
           <div className="flex flex-wrap items-center justify-between gap-3 lg:hidden">
             <Badge variant="outline">{filteredProducts.length} piezas visibles</Badge>
             <Button variant="secondary" onClick={() => setFiltersOpen(true)}>
-              Abrir filtros
+              Abrir curaduria
             </Button>
           </div>
 
@@ -411,7 +412,7 @@ export function CatalogPage() {
 
               <div className="flex flex-wrap gap-2">
                 <Badge variant="outline">Orden: {selectedSortLabel}</Badge>
-                <Badge variant="outline">{filteredProducts.length} resultados</Badge>
+                <Badge variant="outline">{filteredProducts.length} piezas</Badge>
                 {search ? <Badge variant="outline">Busqueda: {search}</Badge> : null}
               </div>
             </div>
@@ -419,10 +420,10 @@ export function CatalogPage() {
             {hasActiveFilters ? (
               <div className="flex flex-wrap items-center gap-3">
                 <p className="text-sm text-[var(--foreground-soft)]">
-                  Vista refinada con filtros activos.
+                  Vista afinada con filtros activos.
                 </p>
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Volver a la curaduria principal
+                  Volver a la seleccion principal
                 </Button>
               </div>
             ) : (
@@ -440,8 +441,8 @@ export function CatalogPage() {
             </div>
           ) : (
             <EmptyState
-              title="No encontramos piezas con esa combinacion"
-              description="Prueba una busqueda mas amplia, vuelve a toda la coleccion o recupera la curaduria principal para seguir explorando el atelier."
+              title="No encontramos piezas para esa combinacion"
+              description="Prueba una busqueda mas amplia, vuelve a toda la coleccion o recupera la seleccion principal para seguir explorando el atelier."
               action={
                 <Button variant="secondary" onClick={clearFilters}>
                   Limpiar filtros
@@ -455,11 +456,11 @@ export function CatalogPage() {
       <Modal
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
-        title="Filtros del catalogo"
+        title="Curaduria del catalogo"
         description="Refina la coleccion por texto, categoria y orden sin perder la lectura premium del storefront."
         footer={
           <Button variant="secondary" onClick={() => setFiltersOpen(false)}>
-            Aplicar vista
+            Ver resultados
           </Button>
         }
       >

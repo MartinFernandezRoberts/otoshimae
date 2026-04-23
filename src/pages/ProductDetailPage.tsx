@@ -32,61 +32,67 @@ function getProductStory(product: PublicProductSummary) {
     return {
       eyebrow: 'Mascara oni',
       intro:
-        'Una pieza concebida para sostener dramatismo, presencia y lectura contemporanea sin perder la huella del taller.',
+        'Una pieza decorativa concebida para sostener dramatismo, presencia y lectura contemporanea sin perder la huella del taller.',
       narrative:
-        'Cada mascara oni de Otoshimae se trabaja como un rostro de impacto: contraste oscuro, pintura manual y una presencia frontal que transforma la pieza en un objeto de coleccion.',
+        'Cada mascara oni de Otoshimae se trabaja como un rostro de impacto: contraste oscuro, pintura manual y una presencia frontal que transforma la pieza en un objeto de coleccion, ambientacion o exhibicion.',
       artisanTitle: 'Trabajo artesanal visible en cada gesto',
       artisanCopy:
-        'La pintura se construye a mano, capa por capa, para revelar profundidad y tension. En algunas versiones, el pelo agregado manualmente intensifica silueta, volumen y caracter.',
+        'La pintura se construye a mano, capa por capa, para revelar profundidad y tension. En algunas versiones, el pelo agregado manualmente intensifica silueta, volumen y caracter visual.',
       attributes: [
         'Pieza pintada a mano',
         'Inspiracion japonesa contemporanea',
-        'Terminaciones artesanales',
+        'Valor decorativo de exhibicion',
         'Cada pieza tiene variaciones unicas',
       ],
+      brandStatement:
+        'No es un objeto generico: es una interpretacion de autor con fuerza visual, lectura ceremonial y acabado profesional.',
       brandQuote:
-        'No es una replica ornamental: es una interpretacion de autor con fuerza visual y acabado profesional.',
+        'No es un objeto generico: es una interpretacion de autor con fuerza visual, lectura ceremonial y acabado profesional.',
     }
   }
 
   if (normalizedCategory.includes('collar')) {
     return {
-      eyebrow: 'Collar de autor',
+      eyebrow: 'Collar decorativo',
       intro:
-        'Accesorio pensado para llevar identidad con sobriedad, contraste y una lectura japonesa contemporanea.',
+        'Una pieza ornamental concebida para aportar identidad visual con sobriedad, contraste y una lectura japonesa contemporanea.',
       narrative:
-        'Los collares de Otoshimae traducen el universo de la marca a una escala mas cercana al cuerpo: detalles precisos, composicion elegante y un acabado que se siente boutique.',
+        'Los collares de Otoshimae traducen el universo de la marca a una escala mas cercana y ornamental: detalles precisos, composicion elegante y un acabado que se siente boutique.',
       artisanTitle: 'Hecho a mano con criterio de composicion',
       artisanCopy:
-        'Cada pieza se afina en taller para equilibrar presencia, textura y terminacion. El objetivo no es solo decorar, sino construir una firma visual portable y distintiva.',
+        'Cada pieza se afina en taller para equilibrar presencia, textura y terminacion. El objetivo es construir un objeto ornamental distintivo, listo para coleccion, estilismo o exhibicion.',
       attributes: [
         'Pieza pintada a mano',
         'Diseno japones contemporaneo',
-        'Edicion artesanal',
+        'Valor ornamental de autor',
         'Cada pieza tiene variaciones unicas',
       ],
+      brandStatement:
+        'Un collar Otoshimae no busca llenar espacio: introduce una presencia precisa y cuidadosamente construida.',
       brandQuote:
-        'Un collar Otoshimae no acompana un look: termina de definirlo con una presencia precisa.',
+        'Un collar Otoshimae no busca llenar espacio: introduce una presencia precisa y cuidadosamente construida.',
     }
   }
 
   return {
-    eyebrow: 'Accesorio artesanal',
+    eyebrow: 'Objeto decorativo',
     intro:
       'Objeto de autor trabajado a mano para aportar contraste, textura y una identidad claramente propia.',
     narrative:
-      'Los accesorios Otoshimae nacen del mismo lenguaje visual que las piezas principales: oscuridad elegante, inspiracion japonesa y una sensibilidad artesanal que evita cualquier sensacion generica.',
+      'Los objetos de Otoshimae nacen del mismo lenguaje visual que las piezas principales: oscuridad elegante, inspiracion japonesa y una sensibilidad artesanal que evita cualquier sensacion generica.',
     artisanTitle: 'Terminacion manual con lectura premium',
     artisanCopy:
-      'Cada superficie se revisa en taller para cuidar color, textura y tension visual. El resultado mantiene la huella artesanal, pero con una ejecucion limpia y profesional.',
+      'Cada superficie se revisa en taller para cuidar color, textura y tension visual. El resultado mantiene la huella artesanal, pero con una ejecucion limpia, ornamental y profesional.',
     attributes: [
       'Pieza pintada a mano',
       'Terminaciones artesanales',
       'Inspiracion japonesa contemporanea',
       'Cada pieza tiene variaciones unicas',
     ],
+    brandStatement:
+      'Un objeto pequeno puede sostener una atmosfera completa cuando esta bien construido.',
     brandQuote:
-      'Un detalle pequeño puede sostener una identidad completa cuando esta bien construido.',
+      'Un objeto pequeno puede sostener una atmosfera completa cuando esta bien construido.',
   }
 }
 
@@ -113,7 +119,7 @@ export function ProductDetailPage() {
     description:
       product?.short_description ??
       product?.description ??
-      'Detalle de producto Otoshimae con galeria inmersiva, narrativa de marca, trabajo artesanal y compra directa.',
+      'Detalle de producto Otoshimae con galeria inmersiva, narrativa de marca y foco en su valor decorativo, artesanal y de coleccion.',
   })
 
   useEffect(() => {
@@ -187,7 +193,7 @@ export function ProductDetailPage() {
     () =>
       (product?.stock ?? 0) > 0
         ? `${quantity} unidad${quantity > 1 ? 'es' : ''}`
-        : 'Sin stock',
+        : 'Serie agotada',
     [product?.stock, quantity],
   )
 
@@ -222,7 +228,7 @@ export function ProductDetailPage() {
       'Pieza pintada a mano.',
       'Cada pieza tiene variaciones unicas propias del trabajo artesanal.',
       'La orden se registra con snapshot de precio y nombre para asegurar trazabilidad.',
-      'El stock se valida nuevamente antes de confirmar la compra.',
+      'El stock se valida nuevamente antes de confirmar el encargo.',
     ],
     [],
   )
@@ -243,7 +249,7 @@ export function ProductDetailPage() {
                   </div>
                   <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
                     <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-                      {story.brandQuote}
+                      {story.brandStatement ?? story.brandQuote}
                     </p>
                   </div>
                 </div>
@@ -305,10 +311,10 @@ export function ProductDetailPage() {
 
     setFeedback(
       result.success
-        ? { tone: 'success', message: 'Pieza agregada al carrito.' }
+        ? { tone: 'success', message: 'La pieza ya forma parte de tu seleccion.' }
         : {
             tone: 'error',
-            message: result.message ?? 'No fue posible agregar esta pieza.',
+            message: result.message ?? 'No pudimos sumar esta pieza a tu seleccion.',
           },
     )
   }
@@ -326,7 +332,7 @@ export function ProductDetailPage() {
       <EmptyState
         title="No se pudo cargar la ficha"
         description={error}
-        action={<Button to={routes.catalog}>Volver al catalogo</Button>}
+        action={<Button to={routes.catalog}>Volver a la coleccion</Button>}
       />
     )
   }
@@ -335,8 +341,8 @@ export function ProductDetailPage() {
     return (
       <EmptyState
         title="Producto no encontrado"
-        description="La pieza que buscas no esta activa o ya no existe dentro del catalogo publico."
-        action={<Button to={routes.catalog}>Explorar catalogo</Button>}
+        description="La pieza que buscas no esta activa o ya no existe dentro de la coleccion publica."
+        action={<Button to={routes.catalog}>Explorar la coleccion</Button>}
       />
     )
   }
@@ -450,7 +456,7 @@ export function ProductDetailPage() {
                   </p>
                   <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
                     Terminaciones artesanales, contraste controlado y una presencia
-                    construida para verse de cerca.
+                    construida para coleccion, ambientacion o exhibicion.
                   </p>
                 </div>
 
@@ -468,7 +474,7 @@ export function ProductDetailPage() {
                       Acabado
                     </p>
                     <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
-                      Revision de taller, presencia premium y lectura boutique.
+                      Revision de taller, presencia ornamental y lectura boutique.
                     </p>
                   </Card>
                 </div>
@@ -487,7 +493,7 @@ export function ProductDetailPage() {
               {story.narrative}
             </p>
             <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-              {story.brandQuote}
+              {story.brandStatement ?? story.brandQuote}
             </p>
           </Card>
         </div>
@@ -513,7 +519,7 @@ export function ProductDetailPage() {
             <p className="text-sm leading-8 text-[var(--foreground-soft)]">
               {product.description ??
                 product.short_description ??
-                'Pieza de autor conectada al catalogo real de Otoshimae, con stock sincronizado y presentacion premium.'}
+                'Pieza decorativa de autor conectada al catalogo real de Otoshimae, con stock sincronizado y presentacion premium.'}
             </p>
 
             <div className="grid gap-3">
@@ -542,7 +548,7 @@ export function ProductDetailPage() {
                 Valor de compra
               </p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
-                Serie cuidada, stock real y una identidad de marca reconocible.
+                Serie cuidada, stock real y una identidad decorativa reconocible.
               </p>
             </Card>
           </div>
@@ -584,17 +590,17 @@ export function ProductDetailPage() {
 
           <div className="grid gap-3">
             <Button onClick={handleAddToCart} disabled={product.stock <= 0}>
-              {product.stock > 0 ? 'Comprar esta pieza' : 'Sin stock'}
+              {product.stock > 0 ? 'Sumar esta pieza' : 'Serie agotada'}
             </Button>
             <Button to={routes.cart} variant="secondary">
-              Ver carrito
+              Abrir mi seleccion
             </Button>
           </div>
 
           <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-            La ficha esta pensada para mostrar valor real: pieza pintada a mano,
-            terminaciones artesanales y una presentacion cuidada para una compra de
-            autor.
+            La ficha pone en primer plano su valor real: pieza pintada a mano,
+            terminaciones artesanales y una presentacion cuidada para una
+            seleccion de autor.
           </p>
         </Card>
       </section>
@@ -603,7 +609,7 @@ export function ProductDetailPage() {
         <div className="space-y-2">
           <Badge>Detalles y contexto</Badge>
           <h2 className="text-4xl text-[var(--foreground)] md:text-5xl">
-            Artesania, narrativa y compra en una sola lectura
+            Artesania, narrativa y seleccion en una sola lectura
           </h2>
         </div>
 
@@ -634,7 +640,7 @@ export function ProductDetailPage() {
 
         <Card className="space-y-5 p-7">
           <div className="space-y-2">
-            <Badge>Pequena narrativa de marca</Badge>
+            <Badge>Narrativa de marca</Badge>
             <h2 className="text-4xl text-[var(--foreground)]">
               Oscuridad elegante, composicion precisa
             </h2>
@@ -647,7 +653,7 @@ export function ProductDetailPage() {
           <p className="text-sm leading-8 text-[var(--foreground-soft)]">
             Cada pieza busca un equilibrio entre artesania visible y acabado
             profesional, para que el resultado se sienta unico sin dejar de verse
-            pulido y deseable.
+            pulido, ornamental y deseable.
           </p>
         </Card>
       </section>
@@ -658,7 +664,7 @@ export function ProductDetailPage() {
             <div className="space-y-2">
               <Badge variant="accent">Productos relacionados</Badge>
               <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
-                Otras piezas del mismo universo visual
+                Otras piezas para construir la misma atmosfera
               </h2>
               <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
                 Si esta pieza conecto contigo, estas selecciones siguen la misma
@@ -667,7 +673,7 @@ export function ProductDetailPage() {
             </div>
 
             <Button to={routes.catalog} variant="secondary">
-              Ver todo el catalogo
+              Ver toda la coleccion
             </Button>
           </div>
 

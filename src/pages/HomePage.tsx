@@ -35,15 +35,15 @@ type CategoryHighlight = CategoryRow & {
 const storytellingMoments = [
   {
     eyebrow: 'Universo',
-    title: 'Otoshimae nace donde la presencia se vuelve objeto.',
+    title: 'Otoshimae nace cuando la estetica japonesa se vuelve pieza de autor.',
     description:
-      'No trabajamos piezas para pasar desapercibidas. Cada mascara oni, collar o accesorio se construye para dejar una huella visual precisa: oscura, refinada y claramente contemporanea.',
+      'Cada mascara oni decorativa, collar ornamental u objeto de adorno se concibe para coleccion, ambientacion o exhibicion. La marca no busca ruido: busca una presencia visual clara, oscura y dificil de olvidar.',
   },
   {
     eyebrow: 'Lenguaje',
-    title: 'Japon contemporaneo, gesto ritual y lectura editorial.',
+    title: 'Japon contemporaneo, gesto ceremonial y lectura editorial.',
     description:
-      'La marca mezcla imaginario japones con una direccion visual sobria y profesional. El resultado no busca folclor ni disfraz: busca caracter, composicion y una identidad de autor.',
+      'Otoshimae toma referencias japonesas y las traduce con rigor de taller. El resultado evita lo folclorico y lo masivo para sostener una identidad de boutique: precisa, atmosferica y profesional.',
   },
 ] as const
 
@@ -52,19 +52,19 @@ const artisanNotes = [
     eyebrow: 'Pintura manual',
     title: 'Color trabajado capa por capa.',
     description:
-      'Las superficies se afinan a mano para lograr contraste alto, profundidad visual y una terminacion limpia que se sostiene tanto en fotografia como en cercania real.',
+      'Las superficies se afinan a mano para lograr contraste, profundidad y una terminacion limpia. Cada pieza conserva la huella artesanal sin perder una lectura visual cuidada y profesional.',
   },
   {
     eyebrow: 'Detalle construido',
     title: 'Volumen, textura y gesto con criterio de taller.',
     description:
-      'Algunas piezas incorporan pelo agregado a mano para reforzar silueta, tension y dramatismo. No es adorno; es parte de la presencia final del objeto.',
+      'Algunas piezas incorporan pelo agregado a mano para reforzar silueta, dramatismo y presencia. Ese detalle no es accesorio: forma parte de la identidad visual final de la obra.',
   },
   {
     eyebrow: 'Series cortas',
-    title: 'Artesania con acabado profesional.',
+    title: 'Series cortas con presencia de galeria.',
     description:
-      'La exclusividad nace del trabajo manual y del stock real. Cada salida del taller conserva la sensacion de pieza cuidada, limitada y lista para una coleccion exigente.',
+      'La exclusividad nace del trabajo manual y del stock real. Cada salida del taller se siente pensada para una coleccion exigente, una ambientacion cuidada o una exhibicion con caracter.',
   },
 ] as const
 
@@ -80,7 +80,7 @@ function buildCategoryCopy(category: CategoryRow) {
       eyebrow: 'Rostros de impacto',
       marketingTitle: 'Mascaras oni con dramatismo escultorico.',
       marketingDescription:
-        'Piezas de presencia frontal, contraste profundo y gesto ritual. Pensadas para coleccion, styling o exhibicion con caracter.',
+        'Mascaras decorativas de presencia frontal, contraste profundo y gesto ceremonial. Pensadas para coleccion, ambientacion o exhibicion con caracter.',
     }
   }
 
@@ -90,10 +90,10 @@ function buildCategoryCopy(category: CategoryRow) {
     normalized.includes('joya')
   ) {
     return {
-      eyebrow: 'Porte diario',
-      marketingTitle: 'Collares con lenguaje japones contemporaneo.',
+      eyebrow: 'Acento ornamental',
+      marketingTitle: 'Collares decorativos con lenguaje japones contemporaneo.',
       marketingDescription:
-        'Accesorios que se sienten precisos y distintos: oscuros, elegantes y trabajados para llevar identidad sin caer en lo obvio.',
+        'Piezas de adorno pensadas para estilismo, coleccion o exhibicion cercana. Oscuras, elegantes y trabajadas para dejar una impresion refinada.',
     }
   }
 
@@ -104,9 +104,9 @@ function buildCategoryCopy(category: CategoryRow) {
   ) {
     return {
       eyebrow: 'Objetos de autor',
-      marketingTitle: 'Accesorios con acabado boutique y mirada de taller.',
+      marketingTitle: 'Objetos decorativos con acabado boutique y mirada de taller.',
       marketingDescription:
-        'Detalles que completan el universo Otoshimae con la misma mezcla de artesania visible, control material y lectura premium.',
+        'Piezas de pequena escala y gran presencia que completan el universo Otoshimae con artesania visible, control material y lectura premium.',
     }
   }
 
@@ -189,8 +189,8 @@ export function HomePage() {
   const heroMetrics = useMemo(
     () => [
       { label: 'Piezas activas', value: formatMetric(content.products.length) },
-      { label: 'Categorias', value: formatMetric(content.categories.length) },
-      { label: 'Atelier picks', value: formatMetric(featuredProducts.length) },
+      { label: 'Familias visuales', value: formatMetric(content.categories.length) },
+      { label: 'Selecciones del atelier', value: formatMetric(featuredProducts.length) },
     ],
     [content.categories.length, content.products.length, featuredProducts.length],
   )
@@ -228,7 +228,7 @@ export function HomePage() {
       },
       {
         label: 'Intencion',
-        value: 'Objetos de autor con presencia profesional.',
+        value: 'Objetos decorativos de autor para coleccion y exhibicion.',
       },
     ],
     [],
@@ -249,7 +249,7 @@ export function HomePage() {
         description={error}
         action={
           <Button variant="secondary" onClick={() => setReloadKey((value) => value + 1)}>
-            Reintentar
+            Intentar de nuevo
           </Button>
         }
       />
@@ -260,7 +260,7 @@ export function HomePage() {
     return (
       <EmptyState
         title="Aun no hay piezas publicadas"
-        description="Activa productos en Supabase para revelar la Home publica y comenzar a construir el universo de Otoshimae."
+        description="Activa productos en Supabase para revelar la Home publica y comenzar a construir una coleccion decorativa con identidad propia."
         action={<Button to={routes.adminLogin}>Ir al panel admin</Button>}
       />
     )
@@ -283,27 +283,27 @@ export function HomePage() {
               </Badge>
               <div className="space-y-5">
                 <h1 className="max-w-5xl text-6xl leading-[0.84] text-[var(--foreground)] md:text-7xl xl:text-8xl">
-                  Objetos japoneses de autor para quienes visten presencia.
+                  Piezas decorativas de autor nacidas del imaginario japones contemporaneo.
                 </h1>
                 <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
-                  Otoshimae convierte mascaras oni, collares y accesorios en un
-                  lenguaje visual propio: oscuro, refinado, pintado a mano y con
-                  una terminacion que se siente artesanal sin perder rigor
-                  profesional.
+                  Otoshimae presenta mascaras oni decorativas, collares
+                  ornamentales y objetos de adorno pintados a mano. Cada pieza se
+                  desarrolla para coleccion, ambientacion o exhibicion con una
+                  presencia oscura, refinada y claramente de autor.
                 </p>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Button to={routes.catalog} size="lg">
-                Explorar el universo
+                Explorar la coleccion
               </Button>
               <Button
                 to={buildProductPath(heroProduct.slug)}
                 variant="secondary"
                 size="lg"
               >
-                Ver pieza protagonista
+                Ver pieza destacada
               </Button>
             </div>
 
@@ -363,7 +363,7 @@ export function HomePage() {
                     Manifiesto material
                   </p>
                   <p className="mt-4 text-lg leading-7 text-[var(--foreground)]">
-                    Pintado a mano. Algunas piezas con pelo agregado manualmente.
+                    Pintado a mano. Algunas piezas incorporan pelo agregado manualmente.
                   </p>
                 </Card>
               </div>
@@ -390,12 +390,12 @@ export function HomePage() {
           <div className="space-y-3">
             <Badge variant="accent">Categorias destacadas</Badge>
             <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
-              Entradas distintas al mismo universo oscuro.
+              Distintas entradas a una misma atmosfera de coleccion.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-              Cada categoria funciona como una puerta de acceso a la marca:
-              rostros de impacto, accesorios de autor y piezas con una lectura
-              claramente boutique.
+              Cada categoria abre una forma distinta de habitar Otoshimae:
+              mascaras decorativas, collares de acento visual y objetos de
+              adorno con lectura claramente boutique.
             </p>
           </div>
         </div>
@@ -469,15 +469,16 @@ export function HomePage() {
           <div className="space-y-3">
             <Badge>Productos destacados</Badge>
             <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
-              Piezas elegidas por su fuerza visual y acabado de taller.
+              Piezas elegidas por su fuerza visual y su valor ornamental.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-              Esta seleccion concentra el pulso de la marca: presencia, contraste,
-              detalle manual y una silueta capaz de sostenerse sola.
+              Esta seleccion concentra el pulso de la marca: contraste, detalle
+              manual y una presencia pensada para coleccion, ambientacion o
+              exhibicion con caracter.
             </p>
           </div>
           <Button to={routes.catalog} variant="secondary">
-            Ver catalogo completo
+            Ver toda la coleccion
           </Button>
         </div>
 
@@ -493,12 +494,12 @@ export function HomePage() {
           <div className="space-y-3">
             <Badge variant="accent">Storytelling</Badge>
             <h2 className="max-w-3xl text-5xl text-[var(--foreground)] md:text-6xl">
-              No vendemos accesorios aislados. Vendemos una atmosfera con firma propia.
+              Otoshimae no vende objetos sueltos. Construye una atmosfera con firma propia.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-              Otoshimae esta pensado como una marca boutique real: objetos que
-              toman referencias japonesas y las traducen a una presencia oscura,
-              sobria y altamente reconocible.
+              La marca esta pensada como un atelier boutique: piezas decorativas
+              que toman referencias japonesas y las traducen a una presencia
+              oscura, sobria y altamente reconocible.
             </p>
           </div>
 
@@ -528,7 +529,8 @@ export function HomePage() {
             <p className="text-sm leading-8 text-[var(--foreground-soft)]">
               El tono visual de la marca busca tension elegante, no estridencia.
               Por eso cada composicion cuida vacio, escala, color y textura con
-              el mismo rigor que la pieza fisica.
+              el mismo rigor que cada pieza fisica destinada a decoracion,
+              coleccion o exhibicion.
             </p>
           </div>
 
@@ -538,7 +540,7 @@ export function HomePage() {
                 Slogan
               </p>
               <p className="mt-3 text-3xl text-[var(--foreground)]">
-                Presencia japonesa. Artesania oscura. Acabado de autor.
+                Japon contemporaneo. Artesania visible. Presencia de autor.
               </p>
             </Card>
             <Card tone="muted" className="p-5">
@@ -547,7 +549,7 @@ export function HomePage() {
               </p>
               <p className="mt-3 text-sm leading-8 text-[var(--foreground-soft)]">
                 Piezas pensadas para quien no busca decoracion generica, sino una
-                firma visual reconocible y bien terminada.
+                firma visual reconocible, artesanal y profesionalmente resuelta.
               </p>
             </Card>
           </div>
@@ -558,12 +560,13 @@ export function HomePage() {
         <div className="space-y-3">
           <Badge variant="accent">Trabajo artesanal</Badge>
           <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
-            El gesto manual no es un detalle decorativo. Es la base del caracter.
+            El gesto manual no adorna la pieza. Define su caracter.
           </h2>
           <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
             La materialidad de Otoshimae se construye desde el taller: pintura a
             mano, ajuste visual fino y decisiones que buscan dramatismo con
-            precision, no ruido.
+            precision. El resultado se siente ornamental, artistico y listo para
+            ocupar un lugar de exhibicion.
           </p>
         </div>
 
@@ -592,20 +595,21 @@ export function HomePage() {
           <div className="space-y-5">
             <Badge variant="accent">Cierre</Badge>
             <h2 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
-              Entra al atelier y elige una pieza que no pida permiso para ser vista.
+              Abre espacio para una pieza que transforme la atmosfera donde se mire.
             </h2>
             <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
               Si buscas una marca artesanal con identidad fuerte, acabados
-              profesionales y una oscuridad elegante de lectura contemporanea,
-              este es el momento de explorar la coleccion completa.
+              profesionales y una lectura japonesa contemporanea, esta es tu
+              entrada a una coleccion hecha para ambientacion, coleccion y
+              exhibicion con caracter.
             </p>
 
             <div className="flex flex-wrap gap-3">
               <Button to={routes.catalog} size="lg">
-                Ver toda la coleccion
+                Descubrir la coleccion
               </Button>
               <Button to={routes.cart} variant="secondary" size="lg">
-                Revisar carrito
+                Revisar mi seleccion
               </Button>
             </div>
           </div>
@@ -616,7 +620,7 @@ export function HomePage() {
                 Ideal para
               </p>
               <p className="mt-3 text-lg leading-7 text-[var(--foreground)]">
-                Coleccion personal, styling editorial y objetos con presencia en escena.
+                Coleccion privada, ambientacion editorial y exhibicion con presencia.
               </p>
             </Card>
             <Card tone="muted" className="p-5">

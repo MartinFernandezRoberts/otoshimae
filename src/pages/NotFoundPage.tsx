@@ -19,19 +19,19 @@ export function NotFoundPage() {
             <Badge variant="accent">404</Badge>
             <div className="space-y-4">
               <h1 className="text-6xl text-[var(--foreground)] md:text-7xl">
-                Esta ruta no forma parte del universo Otoshimae.
+                Esta ruta no pertenece a la coleccion visible de Otoshimae.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
                 El storefront sigue activo, pero este destino no existe o ya no
-                esta publicado. Puedes volver al inicio o abrir el catalogo para
-                seguir explorando la coleccion.
+                esta publicado. Puedes volver al inicio o abrir la coleccion
+                para seguir explorando las piezas del atelier.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Button to={routes.home}>Volver al inicio</Button>
               <Button to={routes.catalog} variant="secondary">
-                Abrir catalogo
+                Abrir la coleccion
               </Button>
             </div>
           </div>
@@ -50,14 +50,14 @@ export function NotFoundPage() {
                     Vuelve a la portada para navegar desde la seleccion principal.
                   </div>
                   <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
-                    Si la pieza existia antes, puede haber sido retirada del catalogo.
+                    Si la pieza existia antes, puede haber sido retirada de la coleccion.
                   </div>
                 </div>
               </div>
 
               <p className="text-sm leading-7 text-[var(--foreground-soft)]">
-                El rewrite de Vercel permanece listo para que React Router resuelva
-                correctamente las rutas publicas del storefront.
+                La mejor forma de retomar el recorrido es volver a la portada o
+                entrar otra vez a la coleccion activa.
               </p>
             </div>
           </div>

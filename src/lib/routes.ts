@@ -20,7 +20,7 @@ export function buildProductPath(slug: string) {
 
 export const publicNavigation: NavItem[] = [
   { label: 'Inicio', to: routes.home },
-  { label: 'Catalogo', to: routes.catalog },
-  { label: 'Carrito', to: routes.cart },
-  { label: 'Checkout', to: routes.checkout },
+  { label: 'Coleccion', to: routes.catalog },
+  { label: 'Encargo', to: routes.cart },
+  { label: 'Cierre', to: routes.checkout },
 ]

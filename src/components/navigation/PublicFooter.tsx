@@ -14,12 +14,13 @@ export function PublicFooter() {
             <Badge variant="accent">Otoshimae atelier</Badge>
             <div className="space-y-4">
               <h2 className="max-w-3xl text-4xl text-[var(--foreground)] md:text-5xl">
-                Objetos japoneses de autor con oscuridad elegante y acabado manual.
+                Piezas decorativas de autor con identidad japonesa contemporanea.
               </h2>
               <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-                Mascaras oni, collares y accesorios concebidos como piezas de
-                presencia: pintados a mano, trabajados en series cortas y
-                terminados con una lectura editorial contemporanea.
+                Otoshimae reune mascaras oni decorativas, collares de acento
+                ornamental y objetos de adorno trabajados a mano. Cada pieza se
+                desarrolla en series cortas, con pintura manual y un acabado que
+                prioriza coleccion, ambientacion y exhibicion.
               </p>
             </div>
 
@@ -37,7 +38,7 @@ export function PublicFooter() {
 
             <div>
               <Button to={routes.catalog} variant="secondary">
-                Explorar catalogo
+                Explorar la coleccion
               </Button>
             </div>
           </div>
@@ -45,7 +46,7 @@ export function PublicFooter() {
           <div className="grid gap-6 md:grid-cols-3">
             <div className="space-y-4">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Navegacion
+                Coleccion
               </p>
               <div className="flex flex-col gap-2 text-sm text-[var(--foreground-soft)]">
                 {publicNavigation.map((item) => (
@@ -65,15 +66,15 @@ export function PublicFooter() {
                 Firma
               </p>
               <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                <p>Presencia ritual.</p>
-                <p>Artesania con contraste.</p>
-                <p>Estetica japonesa contemporanea.</p>
+                <p>Oscuridad con criterio.</p>
+                <p>Taller, no fabrica.</p>
+                <p>Serie corta, huella propia.</p>
               </div>
             </div>
 
             <div className="space-y-4">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Acceso
+                Gestion
               </p>
               <div className="flex flex-col gap-2 text-sm text-[var(--foreground-soft)]">
                 <Link
@@ -82,7 +83,7 @@ export function PublicFooter() {
                 >
                   Panel admin
                 </Link>
-                <span>Coleccion conectada a Supabase y stock en tiempo real.</span>
+                <span>Stock real, series activas y ordenes registradas en vivo.</span>
               </div>
             </div>
           </div>
@@ -91,8 +92,8 @@ export function PublicFooter() {
         <div className="editorial-divider mt-10" />
 
         <div className="mt-6 flex flex-col gap-3 text-[11px] uppercase tracking-[0.28em] text-[var(--muted)] md:flex-row md:items-center md:justify-between">
-          <span>{env.appName} / colecciones en series cortas</span>
-          <span>Storefront premium con identidad de marca y checkout real</span>
+          <span>{env.appName} / piezas decorativas en series cortas</span>
+          <span>Objetos de coleccion, ambientacion y exhibicion con trabajo manual</span>
         </div>
       </div>
     </footer>

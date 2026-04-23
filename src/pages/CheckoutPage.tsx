@@ -7,7 +7,7 @@ export function CheckoutPage() {
   useSeo({
     title: 'Checkout',
     description:
-      'Completa tus datos, confirma las piezas del carrito y crea una orden real en Supabase desde un checkout premium y claro.',
+      'Completa tus datos, confirma tu seleccion y registra una orden real desde un cierre coherente con la identidad de Otoshimae.',
   })
 
   return (
@@ -15,13 +15,14 @@ export function CheckoutPage() {
       <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
         <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
           <div className="space-y-5">
-            <Badge variant="accent">Checkout</Badge>
+            <Badge variant="accent">Cierre del encargo</Badge>
             <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
-              Cierre limpio, datos claros y orden conectada a la base real.
+              Ultimo paso para dejar tu seleccion registrada en el atelier.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
-              Este flujo valida stock, conserva el lenguaje visual del storefront y
-              deja que la confirmacion se sienta parte natural de una compra premium.
+              Este flujo valida stock, conserva el lenguaje visual del storefront
+              y deja que la confirmacion se sienta como una extension natural de
+              una marca boutique, no como un formulario generico.
             </p>
           </div>
 
@@ -30,7 +31,7 @@ export function CheckoutPage() {
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
                 01
               </p>
-              <p className="mt-3 text-2xl text-[var(--foreground)]">Datos</p>
+              <p className="mt-3 text-2xl text-[var(--foreground)]">Referencia</p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
                 Nombre, correo y contexto para registrar correctamente el encargo.
               </p>
@@ -41,7 +42,7 @@ export function CheckoutPage() {
               </p>
               <p className="mt-3 text-2xl text-[var(--foreground)]">Revision</p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Comprobamos stock y precio en tiempo real antes de confirmar.
+                Comprobamos stock y valor en tiempo real antes de confirmar.
               </p>
             </Card>
             <Card tone="muted" className="p-5">
@@ -50,7 +51,7 @@ export function CheckoutPage() {
               </p>
               <p className="mt-3 text-2xl text-[var(--foreground)]">Registro</p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                La orden queda creada en Supabase y lista para gestion interna.
+                La orden queda creada y lista para gestion interna del atelier.
               </p>
             </Card>
           </div>
