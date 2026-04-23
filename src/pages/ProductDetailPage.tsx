@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { ProductCard } from '@/components/ProductCard'
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
@@ -9,17 +10,93 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Loader } from '@/components/ui/Loader'
 import { StatusMessage } from '@/components/ui/StatusMessage'
 import { Tabs } from '@/components/ui/Tabs'
-import { getPublicProductBySlug } from '@/features/catalog/catalog.api'
+import {
+  getPublicProductBySlug,
+  listPublicProducts,
+} from '@/features/catalog/catalog.api'
 import { useCart } from '@/features/cart/useCart'
 import { useSeo } from '@/hooks/useSeo'
 import { formatCurrency } from '@/lib/formatCurrency'
 import { routes } from '@/lib/routes'
 import type { ProductImageRow, PublicProductSummary } from '@/types/database'
 
+type DetailContent = {
+  product: PublicProductSummary | null
+  relatedProducts: PublicProductSummary[]
+}
+
+function getProductStory(product: PublicProductSummary) {
+  const normalizedCategory = `${product.category?.name ?? ''} ${product.slug}`.toLowerCase()
+
+  if (normalizedCategory.includes('mascar') || normalizedCategory.includes('oni')) {
+    return {
+      eyebrow: 'Mascara oni',
+      intro:
+        'Una pieza concebida para sostener dramatismo, presencia y lectura contemporanea sin perder la huella del taller.',
+      narrative:
+        'Cada mascara oni de Otoshimae se trabaja como un rostro de impacto: contraste oscuro, pintura manual y una presencia frontal que transforma la pieza en un objeto de coleccion.',
+      artisanTitle: 'Trabajo artesanal visible en cada gesto',
+      artisanCopy:
+        'La pintura se construye a mano, capa por capa, para revelar profundidad y tension. En algunas versiones, el pelo agregado manualmente intensifica silueta, volumen y caracter.',
+      attributes: [
+        'Pieza pintada a mano',
+        'Inspiracion japonesa contemporanea',
+        'Terminaciones artesanales',
+        'Cada pieza tiene variaciones unicas',
+      ],
+      brandQuote:
+        'No es una replica ornamental: es una interpretacion de autor con fuerza visual y acabado profesional.',
+    }
+  }
+
+  if (normalizedCategory.includes('collar')) {
+    return {
+      eyebrow: 'Collar de autor',
+      intro:
+        'Accesorio pensado para llevar identidad con sobriedad, contraste y una lectura japonesa contemporanea.',
+      narrative:
+        'Los collares de Otoshimae traducen el universo de la marca a una escala mas cercana al cuerpo: detalles precisos, composicion elegante y un acabado que se siente boutique.',
+      artisanTitle: 'Hecho a mano con criterio de composicion',
+      artisanCopy:
+        'Cada pieza se afina en taller para equilibrar presencia, textura y terminacion. El objetivo no es solo decorar, sino construir una firma visual portable y distintiva.',
+      attributes: [
+        'Pieza pintada a mano',
+        'Diseno japones contemporaneo',
+        'Edicion artesanal',
+        'Cada pieza tiene variaciones unicas',
+      ],
+      brandQuote:
+        'Un collar Otoshimae no acompana un look: termina de definirlo con una presencia precisa.',
+    }
+  }
+
+  return {
+    eyebrow: 'Accesorio artesanal',
+    intro:
+      'Objeto de autor trabajado a mano para aportar contraste, textura y una identidad claramente propia.',
+    narrative:
+      'Los accesorios Otoshimae nacen del mismo lenguaje visual que las piezas principales: oscuridad elegante, inspiracion japonesa y una sensibilidad artesanal que evita cualquier sensacion generica.',
+    artisanTitle: 'Terminacion manual con lectura premium',
+    artisanCopy:
+      'Cada superficie se revisa en taller para cuidar color, textura y tension visual. El resultado mantiene la huella artesanal, pero con una ejecucion limpia y profesional.',
+    attributes: [
+      'Pieza pintada a mano',
+      'Terminaciones artesanales',
+      'Inspiracion japonesa contemporanea',
+      'Cada pieza tiene variaciones unicas',
+    ],
+    brandQuote:
+      'Un detalle pequeño puede sostener una identidad completa cuando esta bien construido.',
+  }
+}
+
 export function ProductDetailPage() {
   const { slug = '' } = useParams()
   const { addItem } = useCart()
-  const [product, setProduct] = useState<PublicProductSummary | null>(null)
+  const [content, setContent] = useState<DetailContent>({
+    product: null,
+    relatedProducts: [],
+  })
   const [selectedImage, setSelectedImage] = useState<ProductImageRow | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
@@ -29,12 +106,14 @@ export function ProductDetailPage() {
     message: string
   } | null>(null)
 
+  const product = content.product
+
   useSeo({
     title: product?.name ?? 'Producto',
     description:
       product?.short_description ??
       product?.description ??
-      'Detalle de producto Otoshimae con galeria, stock real y una presentacion premium lista para compra.',
+      'Detalle de producto Otoshimae con galeria inmersiva, narrativa de marca, trabajo artesanal y compra directa.',
   })
 
   useEffect(() => {
@@ -45,13 +124,37 @@ export function ProductDetailPage() {
         setLoading(true)
         setError(null)
 
-        const nextProduct = await getPublicProductBySlug(slug)
+        const [nextProduct, allProducts] = await Promise.all([
+          getPublicProductBySlug(slug),
+          listPublicProducts(),
+        ])
 
-        if (!cancelled) {
-          setProduct(nextProduct)
-          setSelectedImage(nextProduct?.images?.[0] ?? null)
-          setQuantity(1)
+        if (cancelled) {
+          return
         }
+
+        const relatedProducts = nextProduct
+          ? allProducts
+              .filter((item) => item.id !== nextProduct.id)
+              .sort((left, right) => {
+                const leftScore =
+                  Number(left.category_id === nextProduct.category_id) * 3 +
+                  Number(left.is_featured)
+                const rightScore =
+                  Number(right.category_id === nextProduct.category_id) * 3 +
+                  Number(right.is_featured)
+
+                return rightScore - leftScore
+              })
+              .slice(0, 3)
+          : []
+
+        setContent({
+          product: nextProduct,
+          relatedProducts,
+        })
+        setSelectedImage(nextProduct?.images?.[0] ?? null)
+        setQuantity(1)
       } catch (nextError) {
         if (!cancelled) {
           setError(
@@ -75,17 +178,22 @@ export function ProductDetailPage() {
   }, [slug])
 
   const gallery = product?.images ?? []
+  const mainImage = selectedImage ?? gallery[0] ?? null
   const hasComparePrice =
     typeof product?.compare_price === 'number' &&
     product.compare_price > product.price
 
-  const mainImage = selectedImage ?? gallery[0] ?? null
   const quantityLabel = useMemo(
     () =>
       (product?.stock ?? 0) > 0
         ? `${quantity} unidad${quantity > 1 ? 'es' : ''}`
         : 'Sin stock',
     [product?.stock, quantity],
+  )
+
+  const story = useMemo(
+    () => (product ? getProductStory(product) : null),
+    [product],
   )
 
   const productFacts = useMemo(
@@ -103,93 +211,89 @@ export function ProductDetailPage() {
       },
       {
         label: 'Acabado',
-        value: 'Pintado a mano y afinado en taller',
+        value: 'Terminaciones artesanales y revision de taller',
       },
     ],
     [product?.category?.name, product?.stock],
-  )
-
-  const atelierNotes = useMemo(
-    () => [
-      'Construccion pensada para verse de cerca, con contraste, textura y silueta definida.',
-      'Algunas piezas incorporan pelo agregado manualmente para reforzar presencia y caracter.',
-      'La disponibilidad se sincroniza con stock real para sostener la sensacion de exclusividad.',
-    ],
-    [],
-  )
-
-  const careNotes = useMemo(
-    () => [
-      'Ideal para styling editorial, coleccion personal o presencia decorativa con caracter.',
-      'Evita contacto prolongado con humedad o sol directo para conservar pintura y terminaciones.',
-      'El checkout valida nuevamente stock y precio antes de crear la orden final.',
-    ],
-    [],
   )
 
   const purchaseNotes = useMemo(
     () => [
-      `Disponibilidad actual: ${
-        (product?.stock ?? 0) > 0 ? `${product?.stock ?? 0} piezas activas` : 'serie agotada'
-      }.`,
-      `Categoria: ${product?.category?.name ?? 'coleccion libre'}.`,
+      'Pieza pintada a mano.',
+      'Cada pieza tiene variaciones unicas propias del trabajo artesanal.',
       'La orden se registra con snapshot de precio y nombre para asegurar trazabilidad.',
+      'El stock se valida nuevamente antes de confirmar la compra.',
     ],
-    [product?.category?.name, product?.stock],
+    [],
   )
 
   const tabs = useMemo(
-    () => [
-      {
-        value: 'atelier',
-        label: 'Atelier',
-        content: (
-          <div className="space-y-3">
-            {atelierNotes.map((note) => (
-              <div
-                key={note}
-                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        ),
-      },
-      {
-        value: 'cuidado',
-        label: 'Cuidado',
-        content: (
-          <div className="space-y-3">
-            {careNotes.map((note) => (
-              <div
-                key={note}
-                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        ),
-      },
-      {
-        value: 'compra',
-        label: 'Compra',
-        content: (
-          <div className="space-y-3">
-            {purchaseNotes.map((note) => (
-              <div
-                key={note}
-                className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        ),
-      },
-    ],
-    [atelierNotes, careNotes, purchaseNotes],
+    () =>
+      story
+        ? [
+            {
+              value: 'historia',
+              label: 'Narrativa',
+              content: (
+                <div className="space-y-4">
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
+                    <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+                      {story.narrative}
+                    </p>
+                  </div>
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
+                    <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+                      {story.brandQuote}
+                    </p>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              value: 'artesania',
+              label: 'Trabajo artesanal',
+              content: (
+                <div className="space-y-4">
+                  <div className="ui-surface-inset rounded-[var(--radius-md)] p-5">
+                    <p className="text-lg text-[var(--foreground)]">
+                      {story.artisanTitle}
+                    </p>
+                    <p className="mt-3 text-sm leading-8 text-[var(--foreground-soft)]">
+                      {story.artisanCopy}
+                    </p>
+                  </div>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {story.attributes.map((attribute) => (
+                      <div
+                        key={attribute}
+                        className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+                      >
+                        {attribute}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ),
+            },
+            {
+              value: 'compra',
+              label: 'Compra',
+              content: (
+                <div className="space-y-3">
+                  {purchaseNotes.map((note) => (
+                    <div
+                      key={note}
+                      className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+                    >
+                      {note}
+                    </div>
+                  ))}
+                </div>
+              ),
+            },
+          ]
+        : [],
+    [purchaseNotes, story],
   )
 
   const handleAddToCart = () => {
@@ -227,7 +331,7 @@ export function ProductDetailPage() {
     )
   }
 
-  if (!product) {
+  if (!product || !story) {
     return (
       <EmptyState
         title="Producto no encontrado"
@@ -247,25 +351,28 @@ export function ProductDetailPage() {
         ]}
       />
 
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
-        <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
+      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.76)] shadow-[var(--shadow-card)]">
+        <div className="relative grid gap-8 p-6 md:p-8 xl:grid-cols-[1.06fr_0.94fr] xl:p-10">
           <div className="space-y-5">
             <div className="flex flex-wrap gap-2">
               {product.category ? <Badge variant="accent">{product.category.name}</Badge> : null}
+              <Badge>Pieza pintada a mano</Badge>
               <Badge variant={product.stock > 0 ? 'success' : 'danger'}>
                 {product.stock > 0 ? `${product.stock} disponibles` : 'Serie agotada'}
               </Badge>
             </div>
 
-            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
-              {product.name}
-            </h1>
-
-            <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
-              {product.short_description ??
-                product.description ??
-                'Pieza publicada en el catalogo de Otoshimae con lectura premium y stock en tiempo real.'}
-            </p>
+            <div className="space-y-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                {story.eyebrow}
+              </p>
+              <h1 className="max-w-5xl text-6xl text-[var(--foreground)] md:text-7xl">
+                {product.name}
+              </h1>
+              <p className="max-w-3xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
+                {story.intro}
+              </p>
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -283,52 +390,106 @@ export function ProductDetailPage() {
         </div>
       </section>
 
-      <section className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+      <section className="grid gap-8 xl:grid-cols-[1.12fr_0.88fr]">
         <div className="space-y-4">
-          <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)]">
-            {mainImage ? (
-              <img
-                src={mainImage.url}
-                alt={mainImage.alt ?? product.name}
-                className="h-[560px] w-full object-cover"
-                loading="eager"
-                fetchPriority="high"
-              />
-            ) : (
-              <div className="flex h-[560px] items-center justify-center bg-[radial-gradient(circle_at_50%_18%,rgba(209,178,138,0.16),transparent_24%),linear-gradient(145deg,#161210_0%,#060606_100%)]">
-                <span className="text-6xl font-semibold tracking-[0.24em] text-[rgba(245,240,232,0.14)]">
-                  O
-                </span>
+          <div className="grid gap-4 lg:grid-cols-[120px_minmax(0,1fr)]">
+            <div className="order-2 grid grid-cols-4 gap-3 lg:order-1 lg:grid-cols-1">
+              {gallery.length > 0 ? (
+                gallery.map((image) => (
+                  <button
+                    key={image.id}
+                    type="button"
+                    aria-label={`Ver imagen ${image.alt ?? product.name}`}
+                    aria-pressed={image.id === mainImage?.id}
+                    className={`overflow-hidden rounded-[var(--radius-md)] border transition ${
+                      image.id === mainImage?.id
+                        ? 'border-[rgba(184,138,95,0.42)] shadow-[0_0_0_1px_rgba(184,138,95,0.18)]'
+                        : 'border-[var(--line)]'
+                    }`}
+                    onClick={() => setSelectedImage(image)}
+                  >
+                    <img
+                      src={image.url}
+                      alt={image.alt ?? product.name}
+                      className="h-24 w-full object-cover lg:h-[116px]"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                ))
+              ) : (
+                <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-center text-sm text-[var(--foreground-soft)]">
+                  Sin galeria adicional
+                </div>
+              )}
+            </div>
+
+            <div className="order-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)] lg:order-2">
+              <div className="relative h-[620px]">
+                {mainImage ? (
+                  <img
+                    src={mainImage.url}
+                    alt={mainImage.alt ?? product.name}
+                    className="h-full w-full object-cover"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_50%_18%,rgba(184,138,95,0.16),transparent_24%),linear-gradient(145deg,#161210_0%,#060606_100%)]">
+                    <span className="text-6xl font-semibold tracking-[0.24em] text-[rgba(244,237,226,0.14)]">
+                      O
+                    </span>
+                  </div>
+                )}
+
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.03)_0%,rgba(0,0,0,0.12)_28%,rgba(0,0,0,0.72)_100%)]" />
+
+                <div className="absolute left-6 top-6 max-w-sm rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(7,7,7,0.58)] p-5 backdrop-blur-xl">
+                  <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                    Inspiracion japonesa contemporanea
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
+                    Terminaciones artesanales, contraste controlado y una presencia
+                    construida para verse de cerca.
+                  </p>
+                </div>
+
+                <div className="absolute bottom-6 left-6 right-6 grid gap-4 md:grid-cols-2">
+                  <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-4">
+                    <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                      Trabajo artesanal
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
+                      Cada pieza tiene variaciones unicas propias del trabajo manual.
+                    </p>
+                  </Card>
+                  <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-4">
+                    <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
+                      Acabado
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
+                      Revision de taller, presencia premium y lectura boutique.
+                    </p>
+                  </Card>
+                </div>
               </div>
-            )}
+            </div>
           </div>
 
-          {gallery.length > 1 ? (
-            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-              {gallery.map((image) => (
-                <button
-                  key={image.id}
-                  type="button"
-                  aria-label={`Ver imagen ${image.alt ?? product.name}`}
-                  aria-pressed={image.id === mainImage?.id}
-                  className={`overflow-hidden rounded-[var(--radius-md)] border transition ${
-                    image.id === mainImage?.id
-                      ? 'border-[rgba(209,178,138,0.42)] shadow-[0_0_0_1px_rgba(209,178,138,0.18)]'
-                      : 'border-[var(--line)]'
-                  }`}
-                  onClick={() => setSelectedImage(image)}
-                >
-                  <img
-                    src={image.url}
-                    alt={image.alt ?? product.name}
-                    className="h-28 w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
-              ))}
+          <Card tone="accent" className="space-y-5 p-7">
+            <div className="space-y-2">
+              <Badge variant="accent">Narrativa de la pieza</Badge>
+              <h2 className="text-4xl text-[var(--foreground)] md:text-5xl">
+                Un objeto construido para sostener caracter
+              </h2>
             </div>
-          ) : null}
+            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+              {story.narrative}
+            </p>
+            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+              {story.brandQuote}
+            </p>
+          </Card>
         </div>
 
         <Card as="aside" className="space-y-6 p-7 md:p-8">
@@ -348,27 +509,40 @@ export function ProductDetailPage() {
             </div>
           </div>
 
-          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-            {product.description ??
-              product.short_description ??
-              'Ficha de producto conectada a Supabase con stock real, imagenes activas y checkout inmediato.'}
-          </p>
+          <div className="space-y-4">
+            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+              {product.description ??
+                product.short_description ??
+                'Pieza de autor conectada al catalogo real de Otoshimae, con stock sincronizado y presentacion premium.'}
+            </p>
+
+            <div className="grid gap-3">
+              {story.attributes.map((attribute) => (
+                <div
+                  key={attribute}
+                  className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]"
+                >
+                  {attribute}
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div className="grid gap-3 md:grid-cols-2">
             <Card tone="muted" className="p-4">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Construccion
+                Trabajo de taller
               </p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
-                Pintura manual con criterio de contraste y silueta.
+                {story.artisanTitle}
               </p>
             </Card>
             <Card tone="muted" className="p-4">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Presencia
+                Valor de compra
               </p>
               <p className="mt-3 text-sm leading-7 text-[var(--foreground)]">
-                Pensada para styling, coleccion o exhibicion con fuerza visual.
+                Serie cuidada, stock real y una identidad de marca reconocible.
               </p>
             </Card>
           </div>
@@ -381,7 +555,7 @@ export function ProductDetailPage() {
               <button
                 type="button"
                 aria-label="Disminuir cantidad"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(184,138,95,0.4)]"
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                 disabled={product.stock <= 0}
               >
@@ -393,7 +567,7 @@ export function ProductDetailPage() {
               <button
                 type="button"
                 aria-label="Aumentar cantidad"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--line)] text-lg text-[var(--foreground)] transition hover:border-[rgba(184,138,95,0.4)]"
                 onClick={() =>
                   setQuantity((value) => Math.min(product.stock, value + 1))
                 }
@@ -410,25 +584,100 @@ export function ProductDetailPage() {
 
           <div className="grid gap-3">
             <Button onClick={handleAddToCart} disabled={product.stock <= 0}>
-              {product.stock > 0 ? 'Agregar pieza al carrito' : 'Sin stock'}
+              {product.stock > 0 ? 'Comprar esta pieza' : 'Sin stock'}
             </Button>
             <Button to={routes.cart} variant="secondary">
               Ver carrito
             </Button>
           </div>
+
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+            La ficha esta pensada para mostrar valor real: pieza pintada a mano,
+            terminaciones artesanales y una presentacion cuidada para una compra de
+            autor.
+          </p>
         </Card>
       </section>
 
       <section className="space-y-5">
         <div className="space-y-2">
-          <Badge>Detalles de la pieza</Badge>
+          <Badge>Detalles y contexto</Badge>
           <h2 className="text-4xl text-[var(--foreground)] md:text-5xl">
-            Materialidad, cuidado y contexto de compra
+            Artesania, narrativa y compra en una sola lectura
           </h2>
         </div>
 
         <Tabs items={tabs} />
       </section>
+
+      <section className="grid gap-6 xl:grid-cols-[0.98fr_1.02fr]">
+        <Card tone="muted" className="space-y-5 p-7">
+          <div className="space-y-2">
+            <Badge variant="accent">Trabajo artesanal</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">La huella del taller</h2>
+          </div>
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+            {story.artisanCopy}
+          </p>
+          <div className="grid gap-3">
+            <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+              Pieza pintada a mano.
+            </div>
+            <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+              Terminaciones artesanales y revision visual cuidada.
+            </div>
+            <div className="ui-surface-inset rounded-[var(--radius-md)] p-4 text-sm leading-7 text-[var(--foreground-soft)]">
+              Cada pieza tiene variaciones unicas que refuerzan su condicion de autor.
+            </div>
+          </div>
+        </Card>
+
+        <Card className="space-y-5 p-7">
+          <div className="space-y-2">
+            <Badge>Pequena narrativa de marca</Badge>
+            <h2 className="text-4xl text-[var(--foreground)]">
+              Oscuridad elegante, composicion precisa
+            </h2>
+          </div>
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+            Otoshimae trabaja objetos inspirados en la estetica japonesa
+            contemporanea, pero filtrados por una mirada de boutique: menos
+            folclor, mas caracter; menos ruido, mas presencia.
+          </p>
+          <p className="text-sm leading-8 text-[var(--foreground-soft)]">
+            Cada pieza busca un equilibrio entre artesania visible y acabado
+            profesional, para que el resultado se sienta unico sin dejar de verse
+            pulido y deseable.
+          </p>
+        </Card>
+      </section>
+
+      {content.relatedProducts.length > 0 ? (
+        <section className="space-y-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-2">
+              <Badge variant="accent">Productos relacionados</Badge>
+              <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
+                Otras piezas del mismo universo visual
+              </h2>
+              <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
+                Si esta pieza conecto contigo, estas selecciones siguen la misma
+                linea de autor: contraste, identidad japonesa y trabajo manual.
+              </p>
+            </div>
+
+            <Button to={routes.catalog} variant="secondary">
+              Ver todo el catalogo
+            </Button>
+          </div>
+
+          <div className="grid gap-6 xl:grid-cols-3">
+            {content.relatedProducts.map((relatedProduct) => (
+              <ProductCard key={relatedProduct.id} product={relatedProduct} />
+            ))}
+          </div>
+        </section>
+      ) : null}
     </div>
   )
 }
