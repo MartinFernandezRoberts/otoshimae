@@ -103,12 +103,12 @@ export function CartPage() {
   }
 
   return (
-    <div className="space-y-10">
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
+    <div className="space-y-10 md:space-y-12">
+      <section className="ui-section-shell">
         <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
           <div className="space-y-5">
             <Badge variant="accent">Encargo en curso</Badge>
-            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
+            <h1 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-7xl">
               Tu seleccion ya tiene forma. Ahora toca afinarla.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
@@ -191,7 +191,7 @@ export function CartPage() {
                     <button
                       type="button"
                       aria-label={`Disminuir cantidad de ${item.name}`}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
+                      className="ui-interactive-chip inline-flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(244,237,226,0.16)] bg-[rgba(255,255,255,0.035)] text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
                       onClick={() =>
                         updateQuantity(item.productId, Math.max(1, item.quantity - 1))
                       }
@@ -204,7 +204,7 @@ export function CartPage() {
                     <button
                       type="button"
                       aria-label={`Aumentar cantidad de ${item.name}`}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--line)] text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)]"
+                      className="ui-interactive-chip inline-flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(244,237,226,0.16)] bg-[rgba(255,255,255,0.035)] text-[var(--foreground)] transition hover:border-[rgba(209,178,138,0.4)] disabled:opacity-[0.45]"
                       onClick={() =>
                         updateQuantity(
                           item.productId,

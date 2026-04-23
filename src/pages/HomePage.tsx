@@ -267,8 +267,8 @@ export function HomePage() {
   }
 
   return (
-    <div className="space-y-20">
-      <section className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-floating)]">
+    <div className="space-y-14 md:space-y-20">
+      <section className="ui-section-shell shadow-[var(--shadow-floating)]">
         <div className="store-grid absolute inset-0 opacity-25" aria-hidden="true" />
         <div
           className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(184,138,95,0.18),transparent_28%),radial-gradient(circle_at_85%_12%,rgba(109,38,33,0.18),transparent_24%),linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.2))]"
@@ -282,7 +282,7 @@ export function HomePage() {
                 {heroBanner?.title ?? 'Otoshimae / Atelier de presencia'}
               </Badge>
               <div className="space-y-5">
-                <h1 className="max-w-5xl text-6xl leading-[0.84] text-[var(--foreground)] md:text-7xl xl:text-8xl">
+                <h1 className="max-w-5xl text-5xl leading-[0.88] text-[var(--foreground)] md:text-7xl xl:text-8xl">
                   Piezas decorativas de autor nacidas del imaginario japones contemporaneo.
                 </h1>
                 <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
@@ -309,7 +309,7 @@ export function HomePage() {
 
             <div className="grid gap-4 md:grid-cols-3">
               {heroMetrics.map((metric) => (
-                <Card key={metric.label} tone="muted" className="p-5">
+                <Card key={metric.label} tone="muted" className="ui-kpi-card p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     {metric.label}
                   </p>
@@ -322,7 +322,7 @@ export function HomePage() {
           </div>
 
           <div className="grid gap-4 p-6 pt-0 md:p-8 md:pt-0 xl:p-10 xl:pl-0">
-            <div className="relative min-h-[580px] overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)]">
+            <div className="relative min-h-[440px] overflow-hidden rounded-[var(--radius-lg)] border border-[rgba(244,237,226,0.14)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)] md:min-h-[580px]">
               {heroVisual ? (
                 <img
                   src={heroVisual}
@@ -335,7 +335,7 @@ export function HomePage() {
 
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.02)_0%,rgba(0,0,0,0.24)_42%,rgba(0,0,0,0.92)_100%)]" />
 
-              <div className="absolute left-6 top-6 max-w-md rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(7,7,7,0.58)] p-5 backdrop-blur-xl">
+              <div className="absolute left-4 right-4 top-4 max-w-md rounded-[var(--radius-md)] border border-[rgba(244,237,226,0.14)] bg-[rgba(7,7,7,0.72)] p-4 backdrop-blur-xl md:left-6 md:right-auto md:top-6 md:p-5">
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                   Pieza en foco
                 </p>
@@ -349,7 +349,7 @@ export function HomePage() {
                 </p>
               </div>
 
-              <div className="absolute bottom-6 left-6 right-6 grid gap-4 md:grid-cols-2">
+              <div className="absolute bottom-4 left-4 right-4 grid gap-3 md:bottom-6 md:left-6 md:right-6 md:grid-cols-2 md:gap-4">
                 <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Precio atelier
@@ -389,7 +389,7 @@ export function HomePage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <Badge variant="accent">Categorias destacadas</Badge>
-            <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
+            <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
               Distintas entradas a una misma atmosfera de coleccion.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
@@ -468,7 +468,7 @@ export function HomePage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-3">
             <Badge>Productos destacados</Badge>
-            <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
+            <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
               Piezas elegidas por su fuerza visual y su valor ornamental.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
@@ -493,7 +493,7 @@ export function HomePage() {
         <Card tone="accent" className="space-y-8 p-7 md:p-9">
           <div className="space-y-3">
             <Badge variant="accent">Storytelling</Badge>
-            <h2 className="max-w-3xl text-5xl text-[var(--foreground)] md:text-6xl">
+            <h2 className="max-w-3xl text-4xl text-[var(--foreground)] md:text-6xl">
               Otoshimae no vende objetos sueltos. Construye una atmosfera con firma propia.
             </h2>
             <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
@@ -559,7 +559,7 @@ export function HomePage() {
       <section className="space-y-7">
         <div className="space-y-3">
           <Badge variant="accent">Trabajo artesanal</Badge>
-          <h2 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-6xl">
+          <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
             El gesto manual no adorna la pieza. Define su caracter.
           </h2>
           <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">

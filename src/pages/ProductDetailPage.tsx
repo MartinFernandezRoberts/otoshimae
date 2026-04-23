@@ -283,7 +283,7 @@ export function ProductDetailPage() {
             },
             {
               value: 'compra',
-              label: 'Compra',
+              label: 'Encargo',
               content: (
                 <div className="space-y-3">
                   {purchaseNotes.map((note) => (
@@ -357,7 +357,7 @@ export function ProductDetailPage() {
         ]}
       />
 
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.76)] shadow-[var(--shadow-card)]">
+      <section className="ui-section-shell">
         <div className="relative grid gap-8 p-6 md:p-8 xl:grid-cols-[1.06fr_0.94fr] xl:p-10">
           <div className="space-y-5">
             <div className="flex flex-wrap gap-2">
@@ -372,7 +372,7 @@ export function ProductDetailPage() {
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 {story.eyebrow}
               </p>
-              <h1 className="max-w-5xl text-6xl text-[var(--foreground)] md:text-7xl">
+              <h1 className="max-w-5xl text-5xl text-[var(--foreground)] md:text-7xl">
                 {product.name}
               </h1>
               <p className="max-w-3xl text-base leading-8 text-[var(--foreground-soft)] md:text-lg">
@@ -431,7 +431,7 @@ export function ProductDetailPage() {
             </div>
 
             <div className="order-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)] lg:order-2">
-              <div className="relative h-[620px]">
+              <div className="relative h-[440px] md:h-[620px]">
                 {mainImage ? (
                   <img
                     src={mainImage.url}
@@ -450,7 +450,7 @@ export function ProductDetailPage() {
 
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.03)_0%,rgba(0,0,0,0.12)_28%,rgba(0,0,0,0.72)_100%)]" />
 
-                <div className="absolute left-6 top-6 max-w-sm rounded-[var(--radius-md)] border border-[var(--line)] bg-[rgba(7,7,7,0.58)] p-5 backdrop-blur-xl">
+                <div className="absolute left-4 right-4 top-4 max-w-sm rounded-[var(--radius-md)] border border-[rgba(244,237,226,0.14)] bg-[rgba(7,7,7,0.72)] p-4 backdrop-blur-xl md:left-6 md:right-auto md:top-6 md:p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Inspiracion japonesa contemporanea
                   </p>
@@ -460,7 +460,7 @@ export function ProductDetailPage() {
                   </p>
                 </div>
 
-                <div className="absolute bottom-6 left-6 right-6 grid gap-4 md:grid-cols-2">
+                <div className="absolute bottom-4 left-4 right-4 grid gap-3 md:bottom-6 md:left-6 md:right-6 md:grid-cols-2 md:gap-4">
                   <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-4">
                     <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                       Trabajo artesanal
@@ -485,7 +485,7 @@ export function ProductDetailPage() {
           <Card tone="accent" className="space-y-5 p-7">
             <div className="space-y-2">
               <Badge variant="accent">Narrativa de la pieza</Badge>
-              <h2 className="text-4xl text-[var(--foreground)] md:text-5xl">
+              <h2 className="text-3xl text-[var(--foreground)] md:text-5xl">
                 Un objeto construido para sostener caracter
               </h2>
             </div>

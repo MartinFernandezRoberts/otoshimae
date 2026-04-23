@@ -12,11 +12,11 @@ export function CheckoutPage() {
 
   return (
     <div className="space-y-10">
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
+      <section className="ui-section-shell">
         <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
           <div className="space-y-5">
             <Badge variant="accent">Cierre del encargo</Badge>
-            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
+            <h1 className="max-w-4xl text-5xl text-[var(--foreground)] md:text-7xl">
               Ultimo paso para dejar tu seleccion registrada en el atelier.
             </h1>
             <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">

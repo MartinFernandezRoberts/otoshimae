@@ -12,7 +12,7 @@ export function PublicNavbar() {
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 md:px-6">
       <div className="mx-auto max-w-[92rem]">
-        <div className="rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(6,6,6,0.8)] px-5 py-4 shadow-[var(--shadow-soft)] backdrop-blur-2xl">
+        <div className="rounded-[var(--radius-xl)] border border-[rgba(244,237,226,0.14)] bg-[rgba(5,5,5,0.88)] px-4 py-4 shadow-[0_24px_70px_rgba(0,0,0,0.48)] backdrop-blur-2xl md:px-5">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-4">
               <span className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-[rgba(209,178,138,0.22)] bg-[linear-gradient(135deg,rgba(209,178,138,0.16),rgba(255,255,255,0.02))] text-lg font-semibold text-[var(--accent-strong)] shadow-[0_18px_40px_rgba(209,178,138,0.12)]">
@@ -42,10 +42,10 @@ export function PublicNavbar() {
                     end={item.to === '/'}
                     className={({ isActive }) =>
                       cn(
-                        'inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition',
+                        'inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition',
                         isActive
-                          ? 'border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.1)] text-[var(--accent-strong)]'
-                          : 'border-transparent text-[var(--foreground-soft)] hover:border-[var(--line)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]',
+                          ? 'border-[rgba(209,178,138,0.34)] bg-[rgba(209,178,138,0.16)] text-[#ffe9cd]'
+                          : 'border-transparent text-[var(--foreground-soft)] hover:border-[rgba(244,237,226,0.14)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]',
                       )
                     }
                   >

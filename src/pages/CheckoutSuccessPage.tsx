@@ -25,7 +25,7 @@ export function CheckoutSuccessPage() {
   const orderNumber = state?.orderNumber ?? searchParams.get('orden') ?? null
 
   useSeo({
-    title: 'Compra confirmada',
+    title: 'Encargo registrado',
     description:
       'Pantalla de confirmacion Otoshimae con numero de orden, total registrado y siguientes pasos del encargo.',
   })
@@ -37,7 +37,7 @@ export function CheckoutSuccessPage() {
           <div className="space-y-6 p-8 md:p-10">
             <Badge variant="success">Orden creada</Badge>
             <div className="space-y-4">
-              <h1 className="text-6xl text-[var(--foreground)] md:text-7xl">
+              <h1 className="text-5xl text-[var(--foreground)] md:text-7xl">
                 Tu seleccion ya quedo registrada en el atelier.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">

@@ -88,7 +88,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       as="article"
-      className="group overflow-hidden p-0 transition duration-500 hover:-translate-y-1"
+      className="group overflow-hidden p-0 transition duration-500 hover:-translate-y-1 hover:border-[rgba(213,176,139,0.24)] hover:shadow-[0_42px_110px_rgba(0,0,0,0.58)] focus-within:-translate-y-1 focus-within:border-[rgba(213,176,139,0.28)]"
     >
       <div className="relative aspect-[5/6] overflow-hidden border-b border-[var(--line)] bg-[linear-gradient(145deg,#171411_0%,#070707_100%)]">
         {primaryImage ? (
@@ -107,12 +107,12 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
 
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.06)_0%,rgba(7,7,7,0.1)_26%,rgba(7,7,7,0.84)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,7,7,0.04)_0%,rgba(7,7,7,0.2)_36%,rgba(7,7,7,0.9)_100%)]" />
 
         <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {product.category ? <Badge variant="accent">{product.category.name}</Badge> : null}
-            {product.is_featured ? <Badge>Pieza de autor</Badge> : null}
+            {product.is_featured ? <Badge>Pieza de coleccion</Badge> : null}
           </div>
 
           <Badge variant={product.stock > 0 ? 'success' : 'danger'}>
@@ -121,22 +121,22 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="absolute inset-x-5 bottom-5 space-y-3">
-          <p className="text-[10px] uppercase tracking-[0.34em] text-[var(--foreground-soft)]">
+          <p className="max-w-[26ch] text-[10px] font-bold uppercase tracking-[0.28em] text-[#eadfce]">
             {product.sku ? `SKU ${product.sku}` : collectionCopy}
           </p>
-          <h3 className="max-w-[14ch] text-4xl leading-[0.92] text-[var(--foreground)]">
+          <h3 className="max-w-[14ch] text-4xl leading-[0.92] text-[var(--foreground)] drop-shadow-[0_10px_24px_rgba(0,0,0,0.5)]">
             {product.name}
           </h3>
 
-          <div className="translate-y-3 opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-            <div className="inline-flex rounded-full border border-[rgba(244,237,226,0.14)] bg-[rgba(7,7,7,0.44)] px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-[var(--foreground-soft)] backdrop-blur">
+          <div className="translate-y-0 opacity-100 transition duration-500 lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
+            <div className="inline-flex rounded-full border border-[rgba(244,237,226,0.18)] bg-[rgba(7,7,7,0.62)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--foreground)] backdrop-blur">
               Ver ficha y materialidad
             </div>
           </div>
         </div>
       </div>
 
-      <div className="space-y-5 p-6">
+      <div className="space-y-5 p-5 md:p-6">
         <div className="space-y-3">
           <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
             Curaduria del atelier
@@ -152,7 +152,7 @@ export function ProductCard({ product }: ProductCardProps) {
           {productTags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-[var(--line)] bg-[rgba(255,255,255,0.03)] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--foreground-soft)] transition group-hover:border-[rgba(184,138,95,0.22)] group-hover:text-[var(--foreground)]"
+              className="rounded-full border border-[rgba(244,237,226,0.13)] bg-[rgba(255,255,255,0.045)] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.24em] text-[#ddd0bf] transition group-hover:border-[rgba(184,138,95,0.3)] group-hover:text-[var(--foreground)]"
             >
               {tag}
             </span>
@@ -181,7 +181,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 Estado
               </p>
-              <p className="mt-2 text-sm text-[var(--foreground)]">
+              <p className="mt-2 text-sm font-medium text-[var(--foreground)]">
                 {product.stock > 0 ? 'Disponible en la serie activa' : 'A la espera de nueva serie'}
               </p>
             </div>

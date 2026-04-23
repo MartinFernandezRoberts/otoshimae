@@ -271,14 +271,14 @@ export function CatalogPage() {
   }
 
   return (
-    <div className="space-y-12">
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
+    <div className="space-y-10 md:space-y-12">
+      <section className="ui-section-shell">
         <div className="store-grid absolute inset-0 opacity-20" aria-hidden="true" />
         <div className="relative grid gap-8 p-6 md:p-8 xl:grid-cols-[1.08fr_0.92fr] xl:p-10">
           <div className="space-y-6">
             <Badge variant="accent">Catalogo Otoshimae</Badge>
             <div className="space-y-5">
-              <h1 className="max-w-5xl text-6xl text-[var(--foreground)] md:text-7xl">
+              <h1 className="max-w-5xl text-5xl text-[var(--foreground)] md:text-7xl">
                 Una coleccion de autor para mirar con calma y elegir por presencia.
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
@@ -299,7 +299,7 @@ export function CatalogPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <Card tone="muted" className="p-5">
+            <Card tone="muted" className="ui-kpi-card p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 Piezas publicadas
               </p>
@@ -310,7 +310,7 @@ export function CatalogPage() {
                 Series activas listas para exploracion y encargo.
               </p>
             </Card>
-            <Card tone="muted" className="p-5">
+            <Card tone="muted" className="ui-kpi-card p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 Seleccion del atelier
               </p>
@@ -321,7 +321,7 @@ export function CatalogPage() {
                 Piezas elegidas por fuerza visual y firma de marca.
               </p>
             </Card>
-            <Card tone="muted" className="p-5">
+            <Card tone="muted" className="ui-kpi-card p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 Con stock
               </p>
@@ -371,10 +371,10 @@ export function CatalogPage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
+              className={`ui-interactive-chip rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
                 category === 'all'
-                  ? 'border-[rgba(184,138,95,0.24)] bg-[rgba(184,138,95,0.12)] text-[var(--accent-strong)]'
-                  : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.24)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]'
+                  ? 'border-[rgba(213,176,139,0.34)] bg-[rgba(184,138,95,0.16)] text-[#ffe9cd]'
+                  : 'border-[rgba(244,237,226,0.14)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.28)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]'
               }`}
               onClick={() => setCategory('all')}
             >
@@ -384,10 +384,10 @@ export function CatalogPage() {
               <button
                 key={item.id}
                 type="button"
-                className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
+                className={`ui-interactive-chip rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
                   category === item.slug
-                    ? 'border-[rgba(184,138,95,0.24)] bg-[rgba(184,138,95,0.12)] text-[var(--accent-strong)]'
-                    : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.24)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]'
+                    ? 'border-[rgba(213,176,139,0.34)] bg-[rgba(184,138,95,0.16)] text-[#ffe9cd]'
+                    : 'border-[rgba(244,237,226,0.14)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.28)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]'
                 }`}
                 onClick={() => setCategory(item.slug)}
               >
@@ -402,7 +402,7 @@ export function CatalogPage() {
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                   Encabezado de coleccion
                 </p>
-                <h2 className="max-w-3xl text-4xl text-[var(--foreground)] md:text-5xl">
+                <h2 className="max-w-3xl text-3xl text-[var(--foreground)] md:text-5xl">
                   {collectionHeading.title}
                 </h2>
                 <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
