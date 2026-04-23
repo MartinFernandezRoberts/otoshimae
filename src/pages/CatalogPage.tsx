@@ -22,11 +22,18 @@ type SortOption = 'featured' | 'recent' | 'price-asc' | 'price-desc' | 'name'
 
 const sortOptions: Array<{ value: SortOption; label: string }> = [
   { value: 'featured', label: 'Curaduria principal' },
-  { value: 'recent', label: 'Mas recientes' },
+  { value: 'recent', label: 'Recien incorporadas' },
   { value: 'price-asc', label: 'Precio ascendente' },
   { value: 'price-desc', label: 'Precio descendente' },
   { value: 'name', label: 'Nombre A-Z' },
 ]
+
+const collectionSignals = [
+  'Pintado a mano',
+  'Edicion artesanal',
+  'Inspiracion japonesa',
+  'Pieza de autor',
+] as const
 
 function sortProducts(products: PublicProductSummary[], sort: SortOption) {
   const nextProducts = [...products]
@@ -57,6 +64,49 @@ function sortProducts(products: PublicProductSummary[], sort: SortOption) {
   return nextProducts
 }
 
+function getCollectionHeading(category: CategoryRow | null, search: string) {
+  if (search.trim()) {
+    return {
+      title: 'Resultados de busqueda con curaduria activa',
+      description:
+        'Piezas que dialogan con tu busqueda, sin salir del universo oscuro, artesanal y cuidadosamente compuesto de Otoshimae.',
+    }
+  }
+
+  if (!category) {
+    return {
+      title: 'Coleccion completa de objetos con presencia',
+      description:
+        'Explora mascaras oni, collares y accesorios de autor desde una grilla clara, elegante y pensada para dejar respirar el producto.',
+    }
+  }
+
+  const normalized = `${category.slug} ${category.name}`.toLowerCase()
+
+  if (normalized.includes('mascar') || normalized.includes('oni')) {
+    return {
+      title: 'Mascaras con dramatismo ritual y lectura contemporanea',
+      description:
+        'Rostros de impacto concebidos para coleccion, styling o exhibicion con una tension visual precisa y artesanal.',
+    }
+  }
+
+  if (normalized.includes('collar')) {
+    return {
+      title: 'Collares de autor para un porte sobrio y distintivo',
+      description:
+        'Accesorios con inspiracion japonesa, contraste controlado y una presencia que se siente refinada de cerca.',
+    }
+  }
+
+  return {
+    title: `${category.name} dentro del universo Otoshimae`,
+    description:
+      category.description ??
+      'Una familia visual con identidad propia, acabados de taller y presencia boutique.',
+  }
+}
+
 export function CatalogPage() {
   const [searchParams] = useSearchParams()
   const [products, setProducts] = useState<PublicProductSummary[]>([])
@@ -73,7 +123,7 @@ export function CatalogPage() {
   useSeo({
     title: 'Catalogo',
     description:
-      'Explora el catalogo de Otoshimae con una presentacion editorial, filtros por categoria y stock real para cada pieza activa.',
+      'Explora el catalogo de Otoshimae desde una experiencia de tienda premium con filtros limpios, piezas de autor y stock real.',
   })
 
   useEffect(() => {
@@ -126,6 +176,9 @@ export function CatalogPage() {
     return sortProducts(nextProducts, sort)
   }, [category, deferredSearch, products, sort])
 
+  const featuredCount = products.filter((product) => product.is_featured).length
+  const availableCount = products.filter((product) => product.stock > 0).length
+
   const categoryOptions = useMemo(
     () => [
       { value: 'all', label: 'Todas las categorias' },
@@ -138,13 +191,15 @@ export function CatalogPage() {
   )
 
   const selectedCategory = categories.find((item) => item.slug === category) ?? null
-  const selectedCategoryLabel = selectedCategory?.name ?? 'Toda la coleccion'
   const selectedSortLabel =
     sortOptions.find((item) => item.value === sort)?.label ?? 'Curaduria principal'
-  const featuredCount = products.filter((product) => product.is_featured).length
-  const availableCount = products.filter((product) => product.stock > 0).length
   const hasActiveFilters =
     search.trim().length > 0 || category !== 'all' || sort !== 'featured'
+
+  const collectionHeading = useMemo(
+    () => getCollectionHeading(selectedCategory, search),
+    [search, selectedCategory],
+  )
 
   const clearFilters = () => {
     setSearch('')
@@ -156,33 +211,31 @@ export function CatalogPage() {
     <div className="space-y-5">
       <Input
         label="Buscar"
-        placeholder="Nombre de la pieza o referencia visual"
+        placeholder="Nombre de la pieza, oni, collar o referencia visual"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
-        hint="Busca por nombre, descripcion o matiz de la pieza."
+        hint="Busca por nombre, descripcion o tono de la pieza."
       />
       <Select
         label="Categoria"
         value={category}
         onChange={(event) => setCategory(event.target.value)}
         options={categoryOptions}
-        hint="Filtra el catalogo por familia visual."
+        hint="Recorre la coleccion por familia visual."
       />
       <Select
         label="Orden"
         value={sort}
         onChange={(event) => setSort(event.target.value as SortOption)}
         options={sortOptions}
-        hint="Prioriza curaduria, novedad, nombre o precio."
+        hint="Prioriza curaduria, novedad o precio."
       />
 
-      <Button
-        variant="ghost"
-        className="w-full justify-center"
-        onClick={clearFilters}
-      >
-        Limpiar filtros
-      </Button>
+      <div className="grid gap-3">
+        <Button variant="secondary" className="w-full" onClick={clearFilters}>
+          Restablecer filtros
+        </Button>
+      </div>
     </div>
   )
 
@@ -211,26 +264,37 @@ export function CatalogPage() {
   if (products.length === 0) {
     return (
       <EmptyState
-        title="No hay productos activos"
-        description="Publica al menos una pieza desde el panel admin para revelar el catalogo del storefront."
+        title="No hay piezas activas en el atelier"
+        description="Publica productos desde el panel admin para revelar una coleccion con identidad, filtros y stock real."
       />
     )
   }
 
   return (
     <div className="space-y-12">
-      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.72)] shadow-[var(--shadow-card)]">
-        <div className="grid gap-8 p-6 md:p-8 xl:grid-cols-[1.02fr_0.98fr] xl:p-10">
-          <div className="space-y-5">
+      <section className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[rgba(8,8,8,0.74)] shadow-[var(--shadow-card)]">
+        <div className="store-grid absolute inset-0 opacity-20" aria-hidden="true" />
+        <div className="relative grid gap-8 p-6 md:p-8 xl:grid-cols-[1.08fr_0.92fr] xl:p-10">
+          <div className="space-y-6">
             <Badge variant="accent">Catalogo Otoshimae</Badge>
-            <h1 className="max-w-4xl text-6xl text-[var(--foreground)] md:text-7xl">
-              Una coleccion curada para dejar que cada pieza imponga presencia.
-            </h1>
-            <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
-              Aqui el producto manda: contraste alto, lectura limpia y filtros
-              suficientes para descubrir mascaras, collares y accesorios sin perder
-              la sensacion de marca de autor.
-            </p>
+            <div className="space-y-5">
+              <h1 className="max-w-5xl text-6xl text-[var(--foreground)] md:text-7xl">
+                Una coleccion de autor para mirar con calma y elegir con criterio.
+              </h1>
+              <p className="max-w-2xl text-base leading-8 text-[var(--foreground-soft)]">
+                El catalogo prioriza contraste, aire y presencia. Aqui cada pieza
+                se presenta como parte de una curaduria oscura y premium: hecha a
+                mano, de inspiracion japonesa y con un acabado que se siente serio.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {collectionSignals.map((signal) => (
+                <Badge key={signal} variant="outline">
+                  {signal}
+                </Badge>
+              ))}
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
@@ -241,6 +305,9 @@ export function CatalogPage() {
               <p className="mt-4 text-4xl text-[var(--foreground)]">
                 {products.length.toString().padStart(2, '0')}
               </p>
+              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
+                Series activas listas para exploracion y compra.
+              </p>
             </Card>
             <Card tone="muted" className="p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
@@ -248,6 +315,9 @@ export function CatalogPage() {
               </p>
               <p className="mt-4 text-4xl text-[var(--foreground)]">
                 {featuredCount.toString().padStart(2, '0')}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
+                Piezas elegidas por fuerza visual y firma de marca.
               </p>
             </Card>
             <Card tone="muted" className="p-5">
@@ -257,20 +327,23 @@ export function CatalogPage() {
               <p className="mt-4 text-4xl text-[var(--foreground)]">
                 {availableCount.toString().padStart(2, '0')}
               </p>
+              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
+                Disponibilidad real para una compra clara y directa.
+              </p>
             </Card>
           </div>
         </div>
       </section>
 
-      <section className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+      <section className="grid gap-8 lg:grid-cols-[330px_minmax(0,1fr)]">
         <aside className="hidden lg:block">
           <Card className="sticky top-32 space-y-6 p-6">
-            <div className="space-y-2">
-              <Badge>Filtros</Badge>
-              <h2 className="text-4xl text-[var(--foreground)]">Curaduria</h2>
+            <div className="space-y-3">
+              <Badge>Filtros de coleccion</Badge>
+              <h2 className="text-4xl text-[var(--foreground)]">Curaduria limpia</h2>
               <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-                Ajusta la vista para descubrir familias visuales, series activas y
-                piezas destacadas sin salir del lenguaje premium de la tienda.
+                Ajusta el catalogo sin ruido visual: una lectura clara para piezas
+                de autor, series artesanales y objetos con inspiracion japonesa.
               </p>
             </div>
 
@@ -279,9 +352,9 @@ export function CatalogPage() {
             <div className="editorial-divider" />
 
             <div className="space-y-3 text-sm leading-7 text-[var(--foreground-soft)]">
-              <p>Pintado a mano y detalle visible.</p>
-              <p>Series cortas con stock real.</p>
-              <p>Estetica japonesa contemporanea con lectura editorial.</p>
+              <p>Filtra por familia visual o por nombre de pieza.</p>
+              <p>Explora stock real sin perder el tono boutique del storefront.</p>
+              <p>Una grilla pensada para dejar que las piezas respiren.</p>
             </div>
           </Card>
         </aside>
@@ -297,23 +370,23 @@ export function CatalogPage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className={`rounded-full border px-4 py-2 text-sm transition ${
+              className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
                 category === 'all'
-                  ? 'border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.1)] text-[var(--accent-strong)]'
-                  : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[var(--line-strong)] hover:text-[var(--foreground)]'
+                  ? 'border-[rgba(184,138,95,0.24)] bg-[rgba(184,138,95,0.12)] text-[var(--accent-strong)]'
+                  : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.24)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]'
               }`}
               onClick={() => setCategory('all')}
             >
-              Todo
+              Toda la coleccion
             </button>
             {categories.map((item) => (
               <button
                 key={item.id}
                 type="button"
-                className={`rounded-full border px-4 py-2 text-sm transition ${
+                className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
                   category === item.slug
-                    ? 'border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.1)] text-[var(--accent-strong)]'
-                    : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[var(--line-strong)] hover:text-[var(--foreground)]'
+                    ? 'border-[rgba(184,138,95,0.24)] bg-[rgba(184,138,95,0.12)] text-[var(--accent-strong)]'
+                    : 'border-[var(--line)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.24)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--foreground)]'
                 }`}
                 onClick={() => setCategory(item.slug)}
               >
@@ -322,47 +395,53 @@ export function CatalogPage() {
             ))}
           </div>
 
-          <Card tone="muted" className="p-5">
-            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-              <div className="space-y-2">
+          <Card tone="muted" className="space-y-5 p-5 md:p-6">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+              <div className="space-y-3">
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                  Vista actual
+                  Encabezado de coleccion
                 </p>
-                <p className="text-2xl text-[var(--foreground)]">
-                  {selectedCategoryLabel}
-                </p>
-                <p className="text-sm leading-7 text-[var(--foreground-soft)]">
-                  {selectedCategory?.description ??
-                    'Recorre toda la coleccion para descubrir el universo completo de Otoshimae.'}
+                <h2 className="max-w-3xl text-4xl text-[var(--foreground)] md:text-5xl">
+                  {collectionHeading.title}
+                </h2>
+                <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
+                  {collectionHeading.description}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline">Busqueda: {search || 'sin texto'}</Badge>
                 <Badge variant="outline">Orden: {selectedSortLabel}</Badge>
                 <Badge variant="outline">{filteredProducts.length} resultados</Badge>
+                {search ? <Badge variant="outline">Busqueda: {search}</Badge> : null}
               </div>
             </div>
 
             {hasActiveFilters ? (
-              <div className="mt-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="text-sm text-[var(--foreground-soft)]">
+                  Vista refinada con filtros activos.
+                </p>
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Restablecer vista
+                  Volver a la curaduria principal
                 </Button>
               </div>
-            ) : null}
+            ) : (
+              <p className="text-sm text-[var(--foreground-soft)]">
+                Curaduria abierta: descubre la seleccion completa sin filtros activos.
+              </p>
+            )}
           </Card>
 
           {filteredProducts.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-7 md:grid-cols-2 2xl:grid-cols-3">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
             <EmptyState
-              title="No encontramos piezas con esos filtros"
-              description="Prueba con otra busqueda, vuelve a una categoria mas amplia o recupera la curaduria principal del catalogo."
+              title="No encontramos piezas con esa combinacion"
+              description="Prueba una busqueda mas amplia, vuelve a toda la coleccion o recupera la curaduria principal para seguir explorando el atelier."
               action={
                 <Button variant="secondary" onClick={clearFilters}>
                   Limpiar filtros
@@ -377,10 +456,10 @@ export function CatalogPage() {
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
         title="Filtros del catalogo"
-        description="Ajusta categoria, texto y orden para explorar la coleccion."
+        description="Refina la coleccion por texto, categoria y orden sin perder la lectura premium del storefront."
         footer={
           <Button variant="secondary" onClick={() => setFiltersOpen(false)}>
-            Aplicar
+            Aplicar vista
           </Button>
         }
       >
