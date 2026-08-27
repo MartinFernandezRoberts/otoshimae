@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/Input'
 import { Loader } from '@/components/ui/Loader'
 import { Modal } from '@/components/ui/Modal'
 import { Select } from '@/components/ui/Select'
+import { StatCard } from '@/components/ui/StatCard'
 import {
   listPublicCategories,
   listPublicProducts,
@@ -299,39 +300,21 @@ export function CatalogPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <Card tone="muted" className="ui-kpi-card p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Piezas publicadas
-              </p>
-              <p className="mt-4 text-4xl text-[var(--foreground)]">
-                {products.length.toString().padStart(2, '0')}
-              </p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Series activas listas para exploracion y encargo.
-              </p>
-            </Card>
-            <Card tone="muted" className="ui-kpi-card p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Seleccion del atelier
-              </p>
-              <p className="mt-4 text-4xl text-[var(--foreground)]">
-                {featuredCount.toString().padStart(2, '0')}
-              </p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Piezas elegidas por fuerza visual y firma de marca.
-              </p>
-            </Card>
-            <Card tone="muted" className="ui-kpi-card p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Con stock
-              </p>
-              <p className="mt-4 text-4xl text-[var(--foreground)]">
-                {availableCount.toString().padStart(2, '0')}
-              </p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Disponibilidad real para una seleccion clara y sin ruido.
-              </p>
-            </Card>
+            <StatCard
+              label="Piezas publicadas"
+              value={products.length.toString().padStart(2, '0')}
+              description="Series activas listas para exploracion y encargo."
+            />
+            <StatCard
+              label="Seleccion del atelier"
+              value={featuredCount.toString().padStart(2, '0')}
+              description="Piezas elegidas por fuerza visual y firma de marca."
+            />
+            <StatCard
+              label="Con stock"
+              value={availableCount.toString().padStart(2, '0')}
+              description="Disponibilidad real para una seleccion clara y sin ruido."
+            />
           </div>
         </div>
       </section>
@@ -371,11 +354,8 @@ export function CatalogPage() {
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              className={`ui-interactive-chip rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
-                category === 'all'
-                  ? 'border-[rgba(213,176,139,0.34)] bg-[rgba(184,138,95,0.16)] text-[#ffe9cd]'
-                  : 'border-[rgba(244,237,226,0.14)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.28)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]'
-              }`}
+              className="ui-chip"
+              data-active={category === 'all'}
               onClick={() => setCategory('all')}
             >
               Toda la coleccion
@@ -384,11 +364,8 @@ export function CatalogPage() {
               <button
                 key={item.id}
                 type="button"
-                className={`ui-interactive-chip rounded-full border px-4 py-2.5 text-sm font-semibold transition ${
-                  category === item.slug
-                    ? 'border-[rgba(213,176,139,0.34)] bg-[rgba(184,138,95,0.16)] text-[#ffe9cd]'
-                    : 'border-[rgba(244,237,226,0.14)] bg-[rgba(255,255,255,0.02)] text-[var(--foreground-soft)] hover:border-[rgba(184,138,95,0.28)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]'
-                }`}
+                className="ui-chip"
+                data-active={category === item.slug}
                 onClick={() => setCategory(item.slug)}
               >
                 {item.name}

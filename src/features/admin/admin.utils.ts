@@ -52,3 +52,24 @@ export function createSettingsDefaults(): StoreSettingsFormValues {
 export function normalizeSlugFromName(name: string) {
   return slugify(name)
 }
+
+export type SortDirection = 'asc' | 'desc'
+
+export function sortRows<Row, Value extends string | number>(
+  rows: Row[],
+  accessor: (row: Row) => Value,
+  direction: SortDirection,
+) {
+  const sorted = [...rows].sort((left, right) => {
+    const leftValue = accessor(left)
+    const rightValue = accessor(right)
+
+    if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+      return leftValue - rightValue
+    }
+
+    return String(leftValue).localeCompare(String(rightValue))
+  })
+
+  return direction === 'asc' ? sorted : sorted.reverse()
+}

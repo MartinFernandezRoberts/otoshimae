@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/Badge'
-import { Card } from '@/components/ui/Card'
+import { StatCard } from '@/components/ui/StatCard'
 import { CheckoutOrderForm } from '@/features/orders/CheckoutOrderForm'
 import { useSeo } from '@/hooks/useSeo'
 
@@ -27,33 +27,27 @@ export function CheckoutPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            <Card tone="muted" className="p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
-                01
-              </p>
-              <p className="mt-3 text-2xl text-[var(--foreground)]">Referencia</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Nombre, correo y contexto para registrar correctamente el encargo.
-              </p>
-            </Card>
-            <Card tone="muted" className="p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
-                02
-              </p>
-              <p className="mt-3 text-2xl text-[var(--foreground)]">Revision</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                Comprobamos stock y valor en tiempo real antes de confirmar.
-              </p>
-            </Card>
-            <Card tone="muted" className="p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
-                03
-              </p>
-              <p className="mt-3 text-2xl text-[var(--foreground)]">Registro</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                La orden queda creada y lista para gestion interna del atelier.
-              </p>
-            </Card>
+            <StatCard
+              label="01"
+              value="Referencia"
+              description="Nombre, correo y contexto para registrar correctamente el encargo."
+              valueSize="md"
+              accentLabel
+            />
+            <StatCard
+              label="02"
+              value="Revision"
+              description="Comprobamos stock y valor en tiempo real antes de confirmar."
+              valueSize="md"
+              accentLabel
+            />
+            <StatCard
+              label="03"
+              value="Registro"
+              description="La orden queda creada y lista para gestion interna del atelier."
+              valueSize="md"
+              accentLabel
+            />
           </div>
         </div>
       </section>

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Loader } from '@/components/ui/Loader'
+import { StatCard } from '@/components/ui/StatCard'
 import { StatusMessage } from '@/components/ui/StatusMessage'
 import { listPublicProductsByIds } from '@/features/catalog/catalog.api'
 import { useCart } from '@/features/cart/useCart'
@@ -120,15 +121,14 @@ export function CartPage() {
 
           <div className="grid gap-4 md:grid-cols-3">
             {cartSteps.map((step) => (
-              <Card key={step.label} tone="muted" className="p-5">
-                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
-                  {step.label}
-                </p>
-                <p className="mt-3 text-2xl text-[var(--foreground)]">{step.title}</p>
-                <p className="mt-3 text-sm leading-7 text-[var(--foreground-soft)]">
-                  {step.description}
-                </p>
-              </Card>
+              <StatCard
+                key={step.label}
+                label={step.label}
+                value={step.title}
+                description={step.description}
+                valueSize="md"
+                accentLabel
+              />
             ))}
           </div>
         </div>
@@ -142,7 +142,7 @@ export function CartPage() {
           {items.map((item) => (
             <Card key={item.productId} className="overflow-hidden p-0">
               <div className="grid gap-0 md:grid-cols-[220px_1fr]">
-                <div className="min-h-[220px] border-b border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] md:border-b-0 md:border-r">
+                <div className="ui-image-placeholder min-h-[220px] border-b border-[var(--line)] md:border-b-0 md:border-r">
                   {item.imageUrl ? (
                     <img
                       src={item.imageUrl}
@@ -263,7 +263,7 @@ export function CartPage() {
               </div>
             </div>
 
-            <div className="rounded-[var(--radius-md)] border border-[rgba(209,178,138,0.22)] bg-[rgba(209,178,138,0.08)] p-5">
+            <div className="ui-highlight-box p-5">
               <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                 Total del encargo
               </p>

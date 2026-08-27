@@ -7,7 +7,9 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { ImageLightbox } from '@/components/ui/ImageLightbox'
 import { Loader } from '@/components/ui/Loader'
+import { StatCard } from '@/components/ui/StatCard'
 import { StatusMessage } from '@/components/ui/StatusMessage'
 import { Tabs } from '@/components/ui/Tabs'
 import {
@@ -104,6 +106,7 @@ export function ProductDetailPage() {
     relatedProducts: [],
   })
   const [selectedImage, setSelectedImage] = useState<ProductImageRow | null>(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -185,6 +188,10 @@ export function ProductDetailPage() {
 
   const gallery = product?.images ?? []
   const mainImage = selectedImage ?? gallery[0] ?? null
+  const mainImageIndex = Math.max(
+    0,
+    gallery.findIndex((image) => image.id === mainImage?.id),
+  )
   const hasComparePrice =
     typeof product?.compare_price === 'number' &&
     product.compare_price > product.price
@@ -383,14 +390,7 @@ export function ProductDetailPage() {
 
           <div className="grid gap-4 md:grid-cols-3">
             {productFacts.map((fact) => (
-              <Card key={fact.label} tone="muted" className="p-5">
-                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                  {fact.label}
-                </p>
-                <p className="mt-4 text-lg leading-7 text-[var(--foreground)]">
-                  {fact.value}
-                </p>
-              </Card>
+              <StatCard key={fact.label} label={fact.label} value={fact.value} valueSize="sm" />
             ))}
           </div>
         </div>
@@ -430,16 +430,26 @@ export function ProductDetailPage() {
               )}
             </div>
 
-            <div className="order-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)] lg:order-2">
+            <div className="ui-image-placeholder order-1 overflow-hidden rounded-[var(--radius-xl)] border border-[var(--line)] shadow-[var(--shadow-card)] lg:order-2">
               <div className="relative h-[440px] md:h-[620px]">
                 {mainImage ? (
-                  <img
-                    src={mainImage.url}
-                    alt={mainImage.alt ?? product.name}
-                    className="h-full w-full object-cover"
-                    loading="eager"
-                    fetchPriority="high"
-                  />
+                  <button
+                    type="button"
+                    className="group absolute inset-0 block h-full w-full cursor-zoom-in"
+                    onClick={() => setLightboxOpen(true)}
+                    aria-label="Ver imagen ampliada"
+                  >
+                    <img
+                      src={mainImage.url}
+                      alt={mainImage.alt ?? product.name}
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      fetchPriority="high"
+                    />
+                    <span className="pointer-events-none absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-[rgba(244,237,226,0.18)] bg-[rgba(7,7,7,0.72)] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--foreground)] opacity-0 backdrop-blur transition duration-300 group-hover:opacity-100 md:right-6 md:top-6">
+                      Ampliar
+                    </span>
+                  </button>
                 ) : (
                   <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_50%_18%,rgba(184,138,95,0.16),transparent_24%),linear-gradient(145deg,#161210_0%,#060606_100%)]">
                     <span className="text-6xl font-semibold tracking-[0.24em] text-[rgba(244,237,226,0.14)]">
@@ -461,7 +471,7 @@ export function ProductDetailPage() {
                 </div>
 
                 <div className="absolute bottom-4 left-4 right-4 grid gap-3 md:bottom-6 md:left-6 md:right-6 md:grid-cols-2 md:gap-4">
-                  <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-4">
+                  <Card tone="muted" className="ui-card-on-image p-4">
                     <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                       Trabajo artesanal
                     </p>
@@ -469,7 +479,7 @@ export function ProductDetailPage() {
                       Cada pieza tiene variaciones unicas propias del trabajo manual.
                     </p>
                   </Card>
-                  <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-4">
+                  <Card tone="muted" className="ui-card-on-image p-4">
                     <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                       Acabado
                     </p>
@@ -683,6 +693,15 @@ export function ProductDetailPage() {
             ))}
           </div>
         </section>
+      ) : null}
+
+      {lightboxOpen ? (
+        <ImageLightbox
+          images={gallery}
+          startIndex={mainImageIndex}
+          onClose={() => setLightboxOpen(false)}
+          fallbackAlt={product.name}
+        />
       ) : null}
     </div>
   )

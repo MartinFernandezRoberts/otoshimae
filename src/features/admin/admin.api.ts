@@ -118,6 +118,8 @@ export async function listAdminProducts() {
           alt,
           sort_order,
           storage_path,
+          is_deleted,
+          deleted_at,
           created_at
         )
       `,

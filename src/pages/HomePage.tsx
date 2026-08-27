@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Loader } from '@/components/ui/Loader'
+import { StatCard } from '@/components/ui/StatCard'
 import { listPublicCategories, listPublicProducts } from '@/features/catalog/catalog.api'
 import { getPrimaryProductImage } from '@/features/catalog/catalog.utils'
 import { listHomepageBanners } from '@/features/site/site.api'
@@ -31,21 +32,6 @@ type CategoryHighlight = CategoryRow & {
   marketingTitle: string
   marketingDescription: string
 }
-
-const storytellingMoments = [
-  {
-    eyebrow: 'Universo',
-    title: 'Otoshimae nace cuando la estetica japonesa se vuelve pieza de autor.',
-    description:
-      'Cada mascara oni decorativa, collar ornamental u objeto de adorno se concibe para coleccion, ambientacion o exhibicion. La marca no busca ruido: busca una presencia visual clara, oscura y dificil de olvidar.',
-  },
-  {
-    eyebrow: 'Lenguaje',
-    title: 'Japon contemporaneo, gesto ceremonial y lectura editorial.',
-    description:
-      'Otoshimae toma referencias japonesas y las traduce con rigor de taller. El resultado evita lo folclorico y lo masivo para sostener una identidad de boutique: precisa, atmosferica y profesional.',
-  },
-] as const
 
 const artisanNotes = [
   {
@@ -188,9 +174,21 @@ export function HomePage() {
 
   const heroMetrics = useMemo(
     () => [
-      { label: 'Piezas activas', value: formatMetric(content.products.length) },
-      { label: 'Familias visuales', value: formatMetric(content.categories.length) },
-      { label: 'Selecciones del atelier', value: formatMetric(featuredProducts.length) },
+      {
+        label: 'Piezas activas',
+        value: formatMetric(content.products.length),
+        caption: 'Produccion limitada por diseno, no por escala.',
+      },
+      {
+        label: 'Familias visuales',
+        value: formatMetric(content.categories.length),
+        caption: 'Cada familia abre una atmosfera distinta de la coleccion.',
+      },
+      {
+        label: 'Selecciones del atelier',
+        value: formatMetric(featuredProducts.length),
+        caption: 'Curadas por fuerza visual, no por rotacion de inventario.',
+      },
     ],
     [content.categories.length, content.products.length, featuredProducts.length],
   )
@@ -309,20 +307,18 @@ export function HomePage() {
 
             <div className="grid gap-4 md:grid-cols-3">
               {heroMetrics.map((metric) => (
-                <Card key={metric.label} tone="muted" className="ui-kpi-card p-5">
-                  <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                    {metric.label}
-                  </p>
-                  <p className="mt-4 text-4xl text-[var(--foreground)]">
-                    {metric.value}
-                  </p>
-                </Card>
+                <StatCard
+                  key={metric.label}
+                  label={metric.label}
+                  value={metric.value}
+                  description={metric.caption}
+                />
               ))}
             </div>
           </div>
 
           <div className="grid gap-4 p-6 pt-0 md:p-8 md:pt-0 xl:p-10 xl:pl-0">
-            <div className="relative min-h-[440px] overflow-hidden rounded-[var(--radius-lg)] border border-[rgba(244,237,226,0.14)] bg-[linear-gradient(145deg,#161210_0%,#060606_100%)] shadow-[var(--shadow-card)] md:min-h-[580px]">
+            <div className="ui-image-placeholder relative min-h-[440px] overflow-hidden rounded-[var(--radius-lg)] border border-[rgba(244,237,226,0.14)] shadow-[var(--shadow-card)] md:min-h-[580px]">
               {heroVisual ? (
                 <img
                   src={heroVisual}
@@ -350,7 +346,7 @@ export function HomePage() {
               </div>
 
               <div className="absolute bottom-4 left-4 right-4 grid gap-3 md:bottom-6 md:left-6 md:right-6 md:grid-cols-2 md:gap-4">
-                <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-5">
+                <Card tone="muted" className="ui-card-on-image p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Precio atelier
                   </p>
@@ -358,7 +354,7 @@ export function HomePage() {
                     {formatCurrency(heroProduct.price)}
                   </p>
                 </Card>
-                <Card tone="muted" className="border-[var(--border)] bg-[rgba(0,0,0,0.42)] p-5">
+                <Card tone="muted" className="ui-card-on-image p-5">
                   <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
                     Manifiesto material
                   </p>
@@ -371,17 +367,40 @@ export function HomePage() {
 
             <div className="grid gap-4 md:grid-cols-3">
               {brandSignals.map((signal) => (
-                <Card key={signal.label} tone="muted" className="p-5">
-                  <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                    {signal.label}
-                  </p>
-                  <p className="mt-3 text-lg leading-7 text-[var(--foreground)]">
-                    {signal.value}
-                  </p>
-                </Card>
+                <StatCard
+                  key={signal.label}
+                  label={signal.label}
+                  value={signal.value}
+                  valueSize="sm"
+                />
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="space-y-7">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-3">
+            <Badge>Productos destacados</Badge>
+            <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
+              Piezas elegidas por su fuerza visual y su valor ornamental.
+            </h2>
+            <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
+              Esta seleccion concentra el pulso de la marca: contraste, detalle
+              manual y una presencia pensada para coleccion, ambientacion o
+              exhibicion con caracter.
+            </p>
+          </div>
+          <Button to={routes.catalog} variant="secondary">
+            Ver toda la coleccion
+          </Button>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-3">
+          {featuredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </section>
 
@@ -409,7 +428,7 @@ export function HomePage() {
 
               return (
                 <Card key={category.id} as="article" className="overflow-hidden p-0">
-                  <div className="relative h-64 overflow-hidden border-b border-[var(--line)] bg-[linear-gradient(145deg,#171411_0%,#070707_100%)]">
+                  <div className="ui-image-placeholder relative h-64 overflow-hidden border-b border-[var(--line)]">
                     {coverImage ? (
                       <img
                         src={coverImage}
@@ -465,108 +484,15 @@ export function HomePage() {
       </section>
 
       <section className="space-y-7">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-3">
-            <Badge>Productos destacados</Badge>
-            <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
-              Piezas elegidas por su fuerza visual y su valor ornamental.
-            </h2>
-            <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-              Esta seleccion concentra el pulso de la marca: contraste, detalle
-              manual y una presencia pensada para coleccion, ambientacion o
-              exhibicion con caracter.
-            </p>
-          </div>
-          <Button to={routes.catalog} variant="secondary">
-            Ver toda la coleccion
-          </Button>
-        </div>
-
-        <div className="grid gap-6 xl:grid-cols-3">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
-        <Card tone="accent" className="space-y-8 p-7 md:p-9">
-          <div className="space-y-3">
-            <Badge variant="accent">Storytelling</Badge>
-            <h2 className="max-w-3xl text-4xl text-[var(--foreground)] md:text-6xl">
-              Otoshimae no vende objetos sueltos. Construye una atmosfera con firma propia.
-            </h2>
-            <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-              La marca esta pensada como un atelier boutique: piezas decorativas
-              que toman referencias japonesas y las traducen a una presencia
-              oscura, sobria y altamente reconocible.
-            </p>
-          </div>
-
-          <div className="editorial-divider" />
-
-          <div className="space-y-5">
-            {storytellingMoments.map((moment) => (
-              <div key={moment.title} className="space-y-3">
-                <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--accent-strong)]">
-                  {moment.eyebrow}
-                </p>
-                <h3 className="text-4xl text-[var(--foreground)]">{moment.title}</h3>
-                <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-                  {moment.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card className="space-y-6 p-7 md:p-8">
-          <div className="space-y-3">
-            <Badge>Firma Otoshimae</Badge>
-            <h3 className="text-5xl text-[var(--foreground)]">
-              Poetica oscura, lectura clara.
-            </h3>
-            <p className="text-sm leading-8 text-[var(--foreground-soft)]">
-              El tono visual de la marca busca tension elegante, no estridencia.
-              Por eso cada composicion cuida vacio, escala, color y textura con
-              el mismo rigor que cada pieza fisica destinada a decoracion,
-              coleccion o exhibicion.
-            </p>
-          </div>
-
-          <div className="grid gap-4">
-            <Card tone="muted" className="p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Slogan
-              </p>
-              <p className="mt-3 text-3xl text-[var(--foreground)]">
-                Japon contemporaneo. Artesania visible. Presencia de autor.
-              </p>
-            </Card>
-            <Card tone="muted" className="p-5">
-              <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
-                Tesis comercial
-              </p>
-              <p className="mt-3 text-sm leading-8 text-[var(--foreground-soft)]">
-                Piezas pensadas para quien no busca decoracion generica, sino una
-                firma visual reconocible, artesanal y profesionalmente resuelta.
-              </p>
-            </Card>
-          </div>
-        </Card>
-      </section>
-
-      <section className="space-y-7">
         <div className="space-y-3">
-          <Badge variant="accent">Trabajo artesanal</Badge>
+          <Badge variant="accent">Pilares de marca</Badge>
           <h2 className="max-w-4xl text-4xl text-[var(--foreground)] md:text-6xl">
             El gesto manual no adorna la pieza. Define su caracter.
           </h2>
           <p className="max-w-2xl text-sm leading-8 text-[var(--foreground-soft)]">
-            La materialidad de Otoshimae se construye desde el taller: pintura a
-            mano, ajuste visual fino y decisiones que buscan dramatismo con
-            precision. El resultado se siente ornamental, artistico y listo para
-            ocupar un lugar de exhibicion.
+            Otoshimae traduce referencias japonesas a una presencia oscura y de
+            taller: sin folclor, sin produccion masiva, con el mismo rigor en
+            cada pieza destinada a coleccion, ambientacion o exhibicion.
           </p>
         </div>
 

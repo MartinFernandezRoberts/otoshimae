@@ -90,7 +90,7 @@ export function ProductCard({ product }: ProductCardProps) {
       as="article"
       className="group overflow-hidden p-0 transition duration-500 hover:-translate-y-1 hover:border-[rgba(213,176,139,0.24)] hover:shadow-[0_42px_110px_rgba(0,0,0,0.58)] focus-within:-translate-y-1 focus-within:border-[rgba(213,176,139,0.28)]"
     >
-      <div className="relative aspect-[5/6] overflow-hidden border-b border-[var(--line)] bg-[linear-gradient(145deg,#171411_0%,#070707_100%)]">
+      <div className="ui-image-placeholder relative aspect-[5/6] overflow-hidden border-b border-[var(--line)]">
         {primaryImage ? (
           <img
             src={primaryImage.url}
@@ -128,8 +128,8 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
 
-          <div className="translate-y-0 opacity-100 transition duration-500 lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100">
-            <div className="inline-flex rounded-full border border-[rgba(244,237,226,0.18)] bg-[rgba(7,7,7,0.62)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--foreground)] backdrop-blur">
+          <div className="transition duration-500">
+            <div className="inline-flex max-w-full rounded-full border border-[rgba(244,237,226,0.18)] bg-[rgba(7,7,7,0.62)] px-4 py-2 text-center text-[11px] font-bold uppercase tracking-[0.24em] text-[var(--foreground)] backdrop-blur">
               Ver ficha y materialidad
             </div>
           </div>

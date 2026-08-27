@@ -36,7 +36,7 @@ export function NotFoundPage() {
             </div>
           </div>
 
-          <div className="border-t border-[var(--line)] bg-[linear-gradient(145deg,#171310_0%,#070707_100%)] lg:border-l lg:border-t-0">
+          <div className="ui-image-placeholder border-t border-[var(--line)] lg:border-l lg:border-t-0">
             <div className="flex h-full flex-col justify-between gap-8 p-8 md:p-10">
               <div className="space-y-4">
                 <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">

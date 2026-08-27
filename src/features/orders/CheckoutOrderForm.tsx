@@ -358,7 +358,7 @@ export function CheckoutOrderForm() {
           ))}
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[rgba(209,178,138,0.22)] bg-[rgba(209,178,138,0.08)] p-5">
+        <div className="ui-highlight-box p-5">
           <p className="text-[11px] uppercase tracking-[0.32em] text-[var(--muted)]">
             Total
           </p>

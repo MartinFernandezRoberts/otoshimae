@@ -44,14 +44,14 @@ export function PublicNavbar() {
                       cn(
                         'inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition',
                         isActive
-                          ? 'border-[rgba(209,178,138,0.34)] bg-[rgba(209,178,138,0.16)] text-[#ffe9cd]'
+                          ? 'border-[var(--accent-glow)] bg-[var(--accent-soft)] text-[#ffe9cd]'
                           : 'border-transparent text-[var(--foreground-soft)] hover:border-[rgba(244,237,226,0.14)] hover:bg-[rgba(255,255,255,0.045)] hover:text-[var(--foreground)]',
                       )
                     }
                   >
                     <span>{item.label}</span>
                     {item.to === routes.cart && itemCount > 0 ? (
-                      <span className="inline-flex min-w-6 items-center justify-center rounded-full border border-[rgba(209,178,138,0.24)] bg-[rgba(209,178,138,0.12)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent-strong)]">
+                      <span className="inline-flex min-w-6 items-center justify-center rounded-full border border-[rgba(213,176,139,0.24)] bg-[var(--accent-surface)] px-2 py-0.5 text-[10px] font-semibold text-[var(--accent-strong)]">
                         {itemCount}
                       </span>
                     ) : null}

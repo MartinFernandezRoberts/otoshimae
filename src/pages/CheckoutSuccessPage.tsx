@@ -77,9 +77,9 @@ export function CheckoutSuccessPage() {
             </div>
           </div>
 
-          <div className="relative min-h-[320px] border-t border-[var(--line)] bg-[linear-gradient(145deg,#161210_0%,#070707_100%)] lg:border-l lg:border-t-0">
+          <div className="ui-image-placeholder relative min-h-[320px] border-t border-[var(--line)] lg:border-l lg:border-t-0">
             <div
-              className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(209,178,138,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(121,36,27,0.16),transparent_28%)]"
+              className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(213,176,139,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(121,36,27,0.16),transparent_28%)]"
               aria-hidden="true"
             />
 
@@ -100,7 +100,7 @@ export function CheckoutSuccessPage() {
                 </div>
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-[rgba(209,178,138,0.22)] bg-[rgba(209,178,138,0.08)] p-5">
+              <div className="ui-highlight-box p-5">
                 <p className="text-sm leading-7 text-[var(--foreground-soft)]">
                   Gracias por elegir una pieza de autor. La tienda queda lista
                   para que sigas explorando mascaras decorativas, collares
